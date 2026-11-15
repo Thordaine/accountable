@@ -24,7 +24,7 @@ export function RevenueChart({ months, revenue }: { months: string[]; revenue: n
     <AreaChart responsive style={{ width: "100%", height: 240 }} data={data} margin={{ top: 22, right: 12, left: 0, bottom: 0 }}
       accessibilityLayer aria-label="Revenue won per month">
       <CartesianGrid vertical={false} stroke={LINE} />
-      <XAxis dataKey="month" tick={tick} tickLine={false} axisLine={false} />
+      <XAxis dataKey="month" tick={tick} tickLine={false} axisLine={false} tickMargin={10} />
       <YAxis tick={tick} tickLine={false} axisLine={false} width={68} tickFormatter={formatMoneyShort} />
       <Tooltip formatter={(v) => [formatMoney(Number(v)), "Revenue won"]} contentStyle={tooltipStyle} />
       <Area type="monotone" dataKey="value" stroke={SEA_INK} strokeWidth={3} fill={SEA} fillOpacity={0.14}
@@ -44,7 +44,7 @@ export function WinLossChart({ months, won, lost }: { months: string[]; won: num
     <BarChart responsive style={{ width: "100%", height: 214 }} data={data} barGap={2}
       margin={{ top: 8, right: 6, left: 0, bottom: 0 }} accessibilityLayer aria-label="Deals won and lost per month">
       <CartesianGrid vertical={false} stroke={LINE} />
-      <XAxis dataKey="month" tick={tick} tickLine={false} axisLine={false} />
+      <XAxis dataKey="month" tick={tick} tickLine={false} axisLine={false} tickMargin={10} />
       <YAxis tick={tick} tickLine={false} axisLine={false} width={24} allowDecimals={false} />
       <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#F0F4F5" }} />
       <Bar dataKey="won" name="Won" fill={INK} barSize={11} radius={[3, 3, 0, 0]} isAnimationActive={false} />
