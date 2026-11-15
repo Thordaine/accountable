@@ -1,0 +1,19 @@
+{
+  "name": "accountable",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n api,web \"uv run uvicorn accountable.main:app --port 8000 --reload --reload-dir backend\" \"npm -w frontend run dev\"",
+    "test": "npm run test:backend && npm run test:frontend && npm run test:e2e",
+    "test:backend": "uv run pytest",
+    "test:frontend": "npm -w frontend run test",
+    "test:e2e": "playwright test",
+    "seed": "uv run python -m accountable.seed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "concurrently": "^10.0.7"
+  }
+}

@@ -1,0 +1,30 @@
+/* Brand tokens, from mockup B. */
+:root {
+  --page: #F0F4F5;
+  --panel: #FFFFFF;
+  --ink: #073B4C;
+  --muted: #5B7C87;
+  --line: #E4EBED;
+  --mist: #CDD8DB;
+  --sea: #06D6A0;
+  --sea-ink: #05936E;
+  --mari: #FFC145;
+  --mari-ink: #9A6B00;
+  --coral: #F78C6B;
+  --ceru: #118AB2;
+  --rasp: #EF476F;
+
+  --stage-new: var(--sea);
+  --stage-qualified: var(--mari);
+  --stage-proposal: var(--coral);
+  --stage-negotiation: var(--ceru);
+  --stage-won: var(--ink);
+  --stage-lost: var(--rasp);
+
+  --status-lead: var(--mari);
+  --status-qualified: var(--ceru);
+  --status-customer: var(--sea);
+
+  --sans: "Instrument Sans Variable", system-ui, sans-serif;
+  --mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
