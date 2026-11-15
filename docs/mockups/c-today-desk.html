@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accountable - Mockup C: Today desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #F0F4F5; --panel: #FFFFFF; --ink: #073B4C; --muted: #5B7C87; --line: #E4EBED;
+    --mist: #CDD8DB; --sea: #06D6A0; --sea-ink: #05936E; --mari: #FFC145;
+    --coral: #F78C6B; --ceru: #118AB2; --rasp: #EF476F;
+    --sans: "Instrument Sans", system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.5 var(--sans); }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--ceru); outline-offset: 2px; }
+  .app { display: grid; grid-template-columns: 96px 1fr 384px; gap: 24px; padding: 20px; min-height: 100vh; align-items: start; }
+
+  .side { background: var(--panel); border-radius: 20px; padding: 18px 10px; position: sticky; top: 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .mark { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); color: var(--sea); display: grid; place-items: center; font-weight: 700; font-size: 18px; margin-bottom: 18px; }
+  .side a { width: 76px; padding: 10px 0 8px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); text-decoration: none; font-size: 11.5px; font-weight: 500; }
+  .side a:hover { background: var(--page); color: var(--ink); }
+  .side a.on { background: var(--page); color: var(--ink); }
+  .side a.on svg { stroke: var(--sea-ink); }
+  .side svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+  main { padding: 18px 0 40px; min-width: 0; }
+  header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+  h1 { margin: 0; font-size: 15px; font-weight: 600; color: var(--muted); }
+  .tagline { font: 44px/1.08 var(--serif); letter-spacing: -0.01em; margin-top: 6px; max-width: 18ch; }
+  .btn { font: 600 14px var(--sans); border: 0; border-radius: 12px; padding: 12px 18px; background: var(--sea); color: var(--ink); cursor: pointer; }
+
+  .figures { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 26px; }
+  .fig .v { font: 500 28px/1.15 var(--mono); letter-spacing: -0.03em; }
+  .fig .v small { font-size: 13px; color: var(--muted); letter-spacing: 0; margin-right: 3px; }
+  .fig .l { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .fig .meter { height: 6px; background: var(--mist); border-radius: 6px; margin-top: 10px; overflow: hidden; }
+  .fig .meter span { display: block; height: 100%; border-radius: 6px; }
+
+  .panel { background: var(--panel); border-radius: 20px; padding: 24px 26px; }
+  .stack { display: grid; gap: 20px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  h2 { margin: 0; font-size: 16px; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 13px; margin: 2px 0 14px; }
+  .head { display: flex; justify-content: space-between; align-items: flex-start; }
+  .head a { color: var(--ceru); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+  svg text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+  .legend { display: flex; gap: 16px; font-size: 13px; color: var(--muted); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; align-items: end; height: 220px; }
+  .lane { display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; height: 100%; }
+  .chip { border-radius: 6px; position: relative; }
+  .chip.late::after { content: ""; position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--rasp); box-shadow: 0 0 0 2px #fff; }
+  .lane-foot { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 10px; font-size: 13px; }
+  .lane-foot b { display: block; font: 500 14px var(--mono); }
+  .lane-foot span { color: var(--muted); }
+
+  .desk { background: var(--panel); border-radius: 20px; padding: 26px 24px; position: sticky; top: 20px; }
+  .desk h2 { font-size: 18px; }
+  .group { font-size: 13px; font-weight: 600; color: var(--muted); margin: 18px 0 6px; }
+  .group.overdue { color: var(--rasp); }
+  .task { display: grid; grid-template-columns: 20px 1fr; gap: 12px; padding: 9px 0; }
+  .check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--mist); margin-top: 2px; }
+  .overdue-list .check { border-color: var(--rasp); }
+  .task .what { font-weight: 500; line-height: 1.35; }
+  .task .on { font-size: 13px; color: var(--muted); }
+  .task .on a, .tl .on a { color: var(--ceru); text-decoration: none; }
+  .task .due { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .divide { height: 1px; background: var(--line); margin: 22px -24px; }
+
+  .tl { list-style: none; margin: 12px 0 0; padding: 0; position: relative; }
+  .tl::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .tl li { position: relative; padding: 0 0 16px 30px; }
+  .tl .node { position: absolute; left: 0; top: 4px; width: 16px; height: 16px; border-radius: 50%; border: 3px solid #fff; }
+  .tl .what { font-weight: 500; line-height: 1.35; }
+  .tl .on { font-size: 13px; color: var(--muted); }
+  .tl .when { font: 12px var(--mono); color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="side">
+    <div class="mark">A</div>
+    <a href="#" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>Dashboard</a>
+    <a href="#"><svg viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16M16 9h2a2 2 0 0 1 2 2v10M8 7h4M8 11h4M8 15h4M2 21h20"/></svg>Organizations</a>
+    <a href="#"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>Contacts</a>
+    <a href="#"><svg viewBox="0 0 24 24"><path d="M3 7h18v13H3zM8 7V4h8v3M3 12h18"/></svg>Deals</a>
+    <a href="#"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="8" rx="1.5"/></svg>Pipeline</a>
+  </nav>
+
+  <main>
+    <header>
+      <div>
+        <h1>Dashboard</h1>
+        <div class="tagline">Sunday 15 November, and two follow-ups are overdue.</div>
+      </div>
+      <button class="btn">Add deal</button>
+    </header>
+
+    <section class="figures">
+      <div class="fig"><div class="v"><small>US$</small>672,800</div><div class="l">Revenue won, last 12 months</div><div class="meter"><span style="width:100%;background:var(--ink)"></span></div></div>
+      <div class="fig"><div class="v"><small>US$</small>502,250</div><div class="l">Open pipeline, 16 deals</div><div class="meter"><span style="width:75%;background:var(--ceru)"></span></div></div>
+      <div class="fig"><div class="v"><small>US$</small>246,288</div><div class="l">Expected revenue</div><div class="meter"><span style="width:37%;background:var(--sea)"></span></div></div>
+      <div class="fig"><div class="v">74%</div><div class="l">Win rate, 25 won and 9 lost</div><div class="meter"><span style="width:74%;background:var(--mari)"></span></div></div>
+    </section>
+
+    <div class="stack">
+      <section class="panel">
+        <div class="head">
+          <div><h2>Revenue won and deals closed</h2><p class="sub">Per month, December 2025 to November 2026</p></div>
+          <div class="legend"><span><i style="background:var(--sea-ink)"></i>Revenue won</span><span><i style="background:var(--mist)"></i>Deals won</span><span><i style="background:var(--rasp)"></i>Deals lost</span></div>
+        </div>
+        <div id="combo"></div>
+      </section>
+
+      <div class="pair">
+        <section class="panel">
+          <h2>Sales funnel</h2><p class="sub">Value that reached each stage or further</p>
+          <div id="funnel"></div>
+        </section>
+        <section class="panel">
+          <div class="head"><div><h2>Open pipeline</h2><p class="sub">Each block is a deal, sized by value. A red dot means late</p></div><a href="#">Open the board</a></div>
+          <div class="board" id="board"></div>
+          <div class="lane-foot" id="lanefoot"></div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <aside class="desk">
+    <h2>This week</h2>
+    <div class="group overdue">Overdue</div>
+    <div class="overdue-list">
+      <div class="task"><span class="check"></span><div><div class="what">Call back about renewal terms</div><div class="on"><a href="#">Priya Natarajan</a>, Halden Freight</div><div class="due">Due Wed 11 Nov</div></div></div>
+      <div class="task"><span class="check"></span><div><div class="what">Send revised proposal</div><div class="on"><a href="#">Calder Foods packaging line</a></div><div class="due">Due Fri 13 Nov</div></div></div>
+    </div>
+    <div class="group">Today</div>
+    <div class="task"><span class="check"></span><div><div class="what">Confirm pilot start date</div><div class="on"><a href="#">Marcus Oyelaran</a>, Fernhill Clinics</div></div></div>
+    <div class="group">Next 7 days</div>
+    <div class="task"><span class="check"></span><div><div class="what">Check budget sign-off</div><div class="on"><a href="#">Tidewater Hotels guest wifi</a></div><div class="due">Tue 17 Nov</div></div></div>
+    <div class="task"><span class="check"></span><div><div class="what">Intro call with procurement</div><div class="on"><a href="#">Lena Brandt</a>, Osprey Materials</div><div class="due">Thu 19 Nov</div></div></div>
+
+    <div class="divide"></div>
+    <h2>Recent activity</h2>
+    <ul class="tl">
+      <li><span class="node" style="background:var(--ceru)"></span><div class="what">Moved from Proposal to Negotiation</div><div class="on"><a href="#">Calder Foods packaging line</a></div><div class="when">2 hours ago</div></li>
+      <li><span class="node" style="background:var(--mari)"></span><div class="what">Call: asked for a three-year price before their board meets</div><div class="on"><a href="#">Priya Natarajan</a></div><div class="when">Today 10:40</div></li>
+      <li><span class="node" style="background:var(--mari)"></span><div class="what">Email: sent the onboarding pack and pilot schedule</div><div class="on"><a href="#">Marcus Oyelaran</a></div><div class="when">Yesterday 16:05</div></li>
+      <li><span class="node" style="background:var(--ink)"></span><div class="what">Moved from Negotiation to Won</div><div class="on"><a href="#">Bellweather branch kiosks</a></div><div class="when">Thu 12 Nov</div></li>
+      <li><span class="node" style="background:var(--sea)"></span><div class="what">Status changed from Lead to Customer</div><div class="on"><a href="#">Tomás Ruiz</a></div><div class="when">Thu 12 Nov</div></li>
+    </ul>
+  </aside>
+</div>
+
+<script>
+const months = ["Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov"];
+const revenue = [46500,18000,71250,52000,24500,63000,88400,41000,112600,58750,67300,29500];
+const won = [2,1,3,2,1,2,3,2,4,2,2,1];
+const lost = [1,0,1,0,1,1,0,1,2,0,1,1];
+const funnel = [["New",1175050,"#06D6A0"],["Qualified",1111550,"#FFC145"],["Proposal",996050,"#F78C6B"],["Negotiation",870550,"#118AB2"],["Won",672800,"#073B4C"]];
+const lanes = [
+  {name:"New", color:"#06D6A0", deals:[12000,18500,9000,24000], late:[], exp:6350},
+  {name:"Qualified", color:"#FFC145", deals:[32000,15000,27500,41000], late:[1], exp:28875},
+  {name:"Proposal", color:"#F78C6B", deals:[48000,22000,36500,19000], late:[3], exp:62750},
+  {name:"Negotiation", color:"#118AB2", deals:[56000,38000,74250,29500], late:[0], exp:148313},
+];
+const usd = v => "US$" + v.toLocaleString("en-US");
+const k = v => v >= 1e6 ? "US$" + (v/1e6).toFixed(2) + "M" : "US$" + Math.round(v/1000) + "k";
+
+function combo(el) {
+  const W = 980, H = 260, L = 60, R = 36, T = 16, B = 28, max = 120000, maxN = 4;
+  const step = (W - L - R) / months.length, bw = 12;
+  const cx = i => L + step * i + step / 2;
+  const y = v => T + (H - T - B) * (1 - v / max);
+  const yn = n => T + (H - T - B) * (1 - n / maxN);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Revenue won and deals closed per month">`;
+  for (let t = 0; t <= max; t += 40000) s += `<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="#E4EBED"/><text x="${L-10}" y="${y(t)+4}" text-anchor="end">${k(t)}</text>`;
+  for (let n = 0; n <= maxN; n += 2) s += `<text x="${W-R+10}" y="${yn(n)+4}">${n}</text>`;
+  months.forEach((m, i) => {
+    s += `<rect x="${cx(i)-bw-1}" y="${yn(won[i])}" width="${bw}" height="${yn(0)-yn(won[i])}" rx="3" fill="#CDD8DB"/>`;
+    if (lost[i]) s += `<rect x="${cx(i)+1}" y="${yn(lost[i])}" width="${bw}" height="${yn(0)-yn(lost[i])}" rx="3" fill="#EF476F" fill-opacity=".8"/>`;
+    s += `<text x="${cx(i)}" y="${H-6}" text-anchor="middle">${m}</text>`;
+  });
+  const pts = revenue.map((v, i) => `${cx(i)},${y(v)}`).join(" ");
+  s += `<polyline points="${pts}" fill="none" stroke="#05936E" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>`;
+  revenue.forEach((v, i) => s += `<circle cx="${cx(i)}" cy="${y(v)}" r="4" fill="#05936E" stroke="#fff" stroke-width="2"/>`);
+  s += `<text x="${cx(8)}" y="${y(revenue[8])-14}" text-anchor="middle" style="fill:#073B4C;font-weight:500">${usd(revenue[8])}</text>`;
+  el.innerHTML = s + "</svg>";
+}
+
+function taper(el) {
+  const W = 460, H = 250, mid = 104, maxH = 190, gap = 4, w = (W - gap * 4) / 5;
+  const h = v => maxH * v / funnel[0][1];
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Sales funnel">`;
+  funnel.forEach(([n, v, c], i) => {
+    const x0 = i * (w + gap), x1 = x0 + w, h0 = h(v), h1 = i < 4 ? h(funnel[i+1][1]) : h0;
+    s += `<path d="M${x0},${mid-h0/2} L${x1},${mid-h1/2} L${x1},${mid+h1/2} L${x0},${mid+h0/2} Z" fill="${c}"/>`;
+    s += `<text x="${x0+w/2}" y="${mid+4}" text-anchor="middle" style="fill:${i>=3?"#fff":"#073B4C"};font-weight:500;font-size:13px">${k(v)}</text>`;
+    s += `<text x="${x0+w/2}" y="${H-12}" text-anchor="middle" style="font-family:'Instrument Sans';font-size:14px;fill:#073B4C">${n}</text>`;
+  });
+  el.innerHTML = s + "</svg>";
+}
+
+function board() {
+  const max = 210000;
+  document.getElementById("board").innerHTML = lanes.map(l =>
+    `<div class="lane">${l.deals.map((d, i) =>
+      `<div class="chip${l.late.includes(i)?" late":""}" style="height:${d/max*100}%;background:${l.color}" title="${usd(d)}"></div>`).join("")}</div>`).join("");
+  document.getElementById("lanefoot").innerHTML = lanes.map(l =>
+    `<div>${l.name}<b>${k(l.deals.reduce((a, b) => a + b, 0))}</b><span>${k(l.exp)} expected</span></div>`).join("");
+}
+
+combo(document.getElementById("combo"));
+taper(document.getElementById("funnel"));
+board();
+</script>
+</body>
+</html>

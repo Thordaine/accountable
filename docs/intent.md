@@ -35,7 +35,7 @@ When a deal moves to another stage, including Won or Lost, an entry such as "Mov
 
 ### Sample data
 
-Accountable comes with realistic sample data, so every screen looks alive the first time it starts: about 15 organizations, 40 contacts, 30 deals and 80 activities. That means organizations across several industries, contacts at every status, deals at every stage (including deals won and lost over the past months, deals expected to close in the months ahead and a few running late), and activities with some follow-ups due soon and some overdue.
+Accountable comes with realistic sample data, so every screen looks alive the first time it starts: about 15 organizations, 40 contacts, 50 deals and 80 activities. That means organizations across several industries, contacts at every status, deals at every stage (including deals won and lost over the past months, deals expected to close in the months ahead and a few running late), and activities with some follow-ups due soon and some overdue.
 
 ### Look and feel
 

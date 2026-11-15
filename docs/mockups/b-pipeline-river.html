@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accountable - Mockup B: Pipeline river</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #F0F4F5; --panel: #FFFFFF; --ink: #073B4C; --muted: #5B7C87; --line: #E4EBED;
+    --mist: #CDD8DB; --sea: #06D6A0; --sea-ink: #05936E; --mari: #FFC145;
+    --coral: #F78C6B; --ceru: #118AB2; --rasp: #EF476F;
+    --sans: "Instrument Sans", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.5 var(--sans); }
+  .wrap { max-width: 1360px; margin: 0 auto; padding: 20px 40px 48px; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--ceru); outline-offset: 2px; }
+
+  .top { display: flex; align-items: center; gap: 32px; background: var(--panel); border-radius: 16px; padding: 10px 12px 10px 20px; }
+  .brand { font-weight: 700; font-size: 19px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
+  .mark { width: 26px; height: 26px; border-radius: 7px; background: var(--ink); color: var(--sea); display: grid; place-items: center; font-size: 14px; }
+  .tabs { display: flex; gap: 4px; flex: 1; }
+  .tabs a { padding: 8px 14px; border-radius: 10px; color: var(--muted); text-decoration: none; font-weight: 500; }
+  .tabs a:hover { color: var(--ink); background: var(--page); }
+  .tabs a.on { background: var(--ink); color: #fff; }
+  .btn { font: 600 14px var(--sans); border: 0; border-radius: 10px; padding: 10px 16px; background: var(--sea); color: var(--ink); cursor: pointer; }
+
+  .title { display: flex; align-items: baseline; gap: 16px; margin: 32px 0 18px; }
+  h1 { margin: 0; font-size: 30px; letter-spacing: -0.02em; line-height: 1.1; }
+  .date { color: var(--muted); }
+
+  .panel { background: var(--panel); border-radius: 18px; padding: 24px 26px; }
+  h2 { margin: 0; font-size: 16px; font-weight: 600; }
+  .sub { color: var(--muted); font-size: 13px; margin: 2px 0 16px; }
+  .money { font-family: var(--mono); }
+
+  .hero { padding: 28px 28px 24px; margin-bottom: 20px; }
+  .hero-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 22px; }
+  .big { font: 500 46px/1 var(--mono); letter-spacing: -0.04em; margin-top: 10px; }
+  .big small { font-size: 18px; color: var(--muted); letter-spacing: 0; margin-right: 4px; }
+  .hero-side { display: flex; gap: 40px; text-align: right; }
+  .hero-side .v { font: 500 22px var(--mono); letter-spacing: -0.02em; }
+  .hero-side .l { color: var(--muted); font-size: 13px; }
+  .late { color: var(--rasp); }
+
+  .river { display: flex; gap: 6px; height: 132px; }
+  .seg { border-radius: 12px; position: relative; overflow: hidden; padding: 14px 16px; display: flex; flex-direction: column; justify-content: space-between; min-width: 190px; text-decoration: none; color: var(--ink); }
+  .seg .exp { position: absolute; left: 0; bottom: 0; right: 0; background: rgba(7,59,76,.16); }
+  .seg .name { font-weight: 600; position: relative; }
+  .seg .nums { position: relative; font: 500 13px/1.5 var(--mono); }
+  .seg .nums b { display: block; font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+  .seg.dark { color: #fff; }
+  .seg.dark .exp { background: rgba(4,35,46,.35); }
+  .key { display: flex; gap: 20px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+  .key i { display: inline-block; width: 22px; height: 10px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
+
+  .row { display: grid; gap: 20px; margin-bottom: 20px; }
+  .r1 { grid-template-columns: 1.45fr 1fr; }
+  .r2 { grid-template-columns: 1fr 1fr 1fr; }
+  .chart-head { display: flex; justify-content: space-between; align-items: flex-start; }
+  .chart-head .v { font: 500 22px var(--mono); letter-spacing: -0.02em; text-align: right; }
+  .chart-head .l { color: var(--muted); font-size: 13px; text-align: right; }
+  svg text { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+  .legend { display: flex; gap: 16px; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+  .stairs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; align-items: end; height: 220px; margin-top: 8px; }
+  .stair { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; text-align: center; }
+  .stair .col { border-radius: 8px 8px 4px 4px; }
+  .stair .v { font: 500 12px var(--mono); margin-bottom: 6px; }
+  .stair .n { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+  .list { list-style: none; margin: 0; padding: 0; }
+  .list li { display: grid; grid-template-columns: 20px 1fr; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); }
+  .list li:first-child { border-top: 0; padding-top: 2px; }
+  .what { font-weight: 500; line-height: 1.35; }
+  .meta { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; margin-top: 2px; }
+  .meta a { color: var(--ceru); text-decoration: none; }
+  .meta .when { font-family: var(--mono); white-space: nowrap; }
+  .check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--mist); margin-top: 1px; }
+  .pip { width: 10px; height: 10px; border-radius: 50%; margin: 6px 0 0 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="top">
+    <div class="brand"><span class="mark">A</span>Accountable</div>
+    <div class="tabs">
+      <a href="#" class="on">Dashboard</a><a href="#">Organizations</a><a href="#">Contacts</a><a href="#">Deals</a><a href="#">Pipeline</a>
+    </div>
+    <button class="btn">Add deal</button>
+  </nav>
+
+  <div class="title"><h1>Dashboard</h1><span class="date">Sunday 15 November 2026</span></div>
+
+  <section class="panel hero">
+    <div class="hero-head">
+      <div>
+        <h2>Open pipeline</h2>
+        <div class="big"><small>US$</small>502,250</div>
+      </div>
+      <div class="hero-side">
+        <div><div class="v">US$246,288</div><div class="l">Expected revenue</div></div>
+        <div><div class="v">16</div><div class="l">Open deals, <span class="late">3 late</span></div></div>
+        <div><div class="v">74%</div><div class="l">Win rate, last 12 months</div></div>
+      </div>
+    </div>
+    <div class="river" id="river"></div>
+    <div class="key"><span><i style="background:var(--mist)"></i>Value of deals at each stage</span><span><i style="background:#9DB1B7"></i>Darker part: expected revenue</span></div>
+  </section>
+
+  <div class="row r1">
+    <section class="panel">
+      <div class="chart-head">
+        <div><h2>Revenue won</h2><p class="sub">Per month, December 2025 to November 2026</p></div>
+        <div><div class="v">US$672,800</div><div class="l">Last 12 months</div></div>
+      </div>
+      <div id="line"></div>
+    </section>
+    <section class="panel">
+      <div class="chart-head">
+        <div><h2>Deals won and lost</h2><p class="sub">Per month</p></div>
+        <div><div class="v">25 / 9</div><div class="l">Won / lost</div></div>
+      </div>
+      <div class="legend"><span><i style="background:var(--sea)"></i>Won</span><span><i style="background:var(--rasp)"></i>Lost</span></div>
+      <div id="bars"></div>
+    </section>
+  </div>
+
+  <div class="row r2">
+    <section class="panel">
+      <h2>Sales funnel</h2><p class="sub">Value that reached each stage or further</p>
+      <div class="stairs" id="stairs"></div>
+    </section>
+    <section class="panel">
+      <h2>Follow-ups</h2><p class="sub">Overdue and due in the next 7 days</p>
+      <ul class="list">
+        <li><span class="check"></span><div><div class="what">Call back about renewal terms</div><div class="meta"><a href="#">Priya Natarajan</a><span class="when late">4 days overdue</span></div></div></li>
+        <li><span class="check"></span><div><div class="what">Send revised proposal</div><div class="meta"><a href="#">Calder Foods packaging line</a><span class="when late">2 days overdue</span></div></div></li>
+        <li><span class="check"></span><div><div class="what">Confirm pilot start date</div><div class="meta"><a href="#">Marcus Oyelaran</a><span class="when">Today</span></div></div></li>
+        <li><span class="check"></span><div><div class="what">Check budget sign-off</div><div class="meta"><a href="#">Tidewater Hotels guest wifi</a><span class="when">Tue 17 Nov</span></div></div></li>
+        <li><span class="check"></span><div><div class="what">Intro call with procurement</div><div class="meta"><a href="#">Lena Brandt</a><span class="when">Thu 19 Nov</span></div></div></li>
+      </ul>
+    </section>
+    <section class="panel">
+      <h2>Recent activity</h2><p class="sub">Newest first</p>
+      <ul class="list">
+        <li><span class="pip" style="background:var(--ceru)"></span><div><div class="what">Moved from Proposal to Negotiation</div><div class="meta"><a href="#">Calder Foods packaging line</a><span class="when">2h ago</span></div></div></li>
+        <li><span class="pip" style="background:var(--mist)"></span><div><div class="what">Call: asked for a three-year price</div><div class="meta"><a href="#">Priya Natarajan</a><span class="when">10:40</span></div></div></li>
+        <li><span class="pip" style="background:var(--mist)"></span><div><div class="what">Email: sent the onboarding pack</div><div class="meta"><a href="#">Marcus Oyelaran</a><span class="when">Yesterday</span></div></div></li>
+        <li><span class="pip" style="background:var(--ink)"></span><div><div class="what">Moved from Negotiation to Won</div><div class="meta"><a href="#">Bellweather branch kiosks</a><span class="when">12 Nov</span></div></div></li>
+        <li><span class="pip" style="background:var(--sea)"></span><div><div class="what">Status changed from Lead to Customer</div><div class="meta"><a href="#">Tomás Ruiz</a><span class="when">12 Nov</span></div></div></li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<script>
+const months = ["Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov"];
+const revenue = [46500,18000,71250,52000,24500,63000,88400,41000,112600,58750,67300,29500];
+const won = [2,1,3,2,1,2,3,2,4,2,2,1];
+const lost = [1,0,1,0,1,1,0,1,2,0,1,1];
+const stages = [
+  {name:"New", color:"#06D6A0", n:4, value:63500, exp:6350},
+  {name:"Qualified", color:"#FFC145", n:4, value:115500, exp:28875},
+  {name:"Proposal", color:"#F78C6B", n:4, value:125500, exp:62750},
+  {name:"Negotiation", color:"#118AB2", n:4, value:197750, exp:148313, dark:true},
+];
+const funnel = [["New",1175050,"#06D6A0"],["Qualified",1111550,"#FFC145"],["Proposal",996050,"#F78C6B"],["Negotiation",870550,"#118AB2"],["Won",672800,"#073B4C"]];
+const usd = v => "US$" + v.toLocaleString("en-US");
+const k = v => v >= 1e6 ? "US$" + (v/1e6).toFixed(2) + "M" : "US$" + Math.round(v/1000) + "k";
+
+document.getElementById("river").innerHTML = stages.map(s =>
+  `<a href="#" class="seg${s.dark?" dark":""}" style="flex:${s.value};background:${s.color}">
+     <span class="exp" style="height:${s.exp/s.value*100}%"></span>
+     <span class="name">${s.name}</span>
+     <span class="nums"><b>${k(s.value)}</b>${s.n} deals<br>${k(s.exp)} expected</span>
+   </a>`).join("");
+
+document.getElementById("stairs").innerHTML = funnel.map(([n, v, c]) =>
+  `<div class="stair"><div class="v">${k(v)}</div><div class="col" style="height:${v/funnel[0][1]*82}%;background:${c}"></div><div class="n">${n}</div></div>`).join("");
+
+function lineChart(el, labels, values) {
+  const W = 700, H = 230, L = 60, R = 12, T = 14, B = 28, max = 120000;
+  const x = i => L + i * (W - L - R) / (labels.length - 1);
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Revenue won per month">`;
+  for (let t = 0; t <= max; t += 40000) s += `<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="#E4EBED"/><text x="${L-10}" y="${y(t)+4}" text-anchor="end">${k(t)}</text>`;
+  const pts = values.map((v, i) => [x(i), y(v)]);
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i-1], [x1, y1] = pts[i], mx = (x0 + x1) / 2;
+    d += ` C${mx},${y0} ${mx},${y1} ${x1},${y1}`;
+  }
+  s += `<path d="${d} L${pts.at(-1)[0]},${y(0)} L${pts[0][0]},${y(0)} Z" fill="#06D6A0" fill-opacity=".14"/>`;
+  s += `<path d="${d}" fill="none" stroke="#05936E" stroke-width="3" stroke-linecap="round"/>`;
+  s += `<circle cx="${pts[8][0]}" cy="${pts[8][1]}" r="5" fill="#05936E"/><text x="${pts[8][0]}" y="${pts[8][1]-12}" text-anchor="middle" style="fill:#073B4C;font-weight:500">${usd(values[8])}</text>`;
+  labels.forEach((m, i) => s += `<text x="${x(i)}" y="${H-6}" text-anchor="middle">${m}</text>`);
+  el.innerHTML = s + "</svg>";
+}
+
+function barChart(el, labels, a, b) {
+  const W = 480, H = 214, L = 24, R = 6, T = 8, B = 28, max = 4;
+  const step = (W - L - R) / labels.length, bw = 11;
+  const y = v => T + (H - T - B) * (1 - v / max);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Deals won and lost per month">`;
+  for (let t = 0; t <= max; t++) s += `<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="#E4EBED"/><text x="${L-8}" y="${y(t)+4}" text-anchor="end">${t}</text>`;
+  labels.forEach((m, i) => {
+    const cx = L + step * i + step / 2;
+    s += `<rect x="${cx-bw-1}" y="${y(a[i])}" width="${bw}" height="${y(0)-y(a[i])}" rx="3" fill="#06D6A0"/>`;
+    if (b[i]) s += `<rect x="${cx+1}" y="${y(b[i])}" width="${bw}" height="${y(0)-y(b[i])}" rx="3" fill="#EF476F"/>`;
+    s += `<text x="${cx}" y="${H-6}" text-anchor="middle">${m}</text>`;
+  });
+  el.innerHTML = s + "</svg>";
+}
+
+lineChart(document.getElementById("line"), months, revenue);
+barChart(document.getElementById("bars"), months, won, lost);
+</script>
+</body>
+</html>
