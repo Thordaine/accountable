@@ -3,7 +3,14 @@ from datetime import date, timedelta
 import pytest
 from sqlalchemy import func, select
 
-from accountable.db import activities, contacts, deals, engine_for, metadata, organizations
+from accountable.db import (
+    activities,
+    contacts,
+    deals,
+    engine_for,
+    metadata,
+    organizations,
+)
 from accountable.schemas import OPEN_STAGES
 from accountable.seed import seed
 
@@ -37,7 +44,11 @@ def test_counts(conn):
 
 
 def test_variety(conn):
-    assert set(conn.execute(select(contacts.c.status)).scalars()) == {"Lead", "Qualified", "Customer"}
+    assert set(conn.execute(select(contacts.c.status)).scalars()) == {
+        "Lead",
+        "Qualified",
+        "Customer",
+    }
     assert len(set(conn.execute(select(organizations.c.industry)).scalars())) >= 5
 
 
@@ -51,7 +62,9 @@ def test_stages(conn):
 def test_closed_dates(conn):
     closed = [d for d in all_deals(conn) if d["stage"] in ("Won", "Lost")]
     assert all(FIRST_DAY <= d["close_date"] <= TODAY for d in closed)
-    won_months = [d["close_date"].strftime("%Y-%m") for d in closed if d["stage"] == "Won"]
+    won_months = [
+        d["close_date"].strftime("%Y-%m") for d in closed if d["stage"] == "Won"
+    ]
     assert all(0 <= won_months.count(m) <= 4 for m in set(won_months))
 
 
@@ -66,7 +79,12 @@ def test_open_dates(conn):
 def test_follow_ups(conn):
     pending = activities.c.done.is_(False)
     overdue = count(conn, activities, pending, activities.c.follow_up_date < TODAY)
-    soon = count(conn, activities, pending, activities.c.follow_up_date.between(TODAY, TODAY + timedelta(days=7)))
+    soon = count(
+        conn,
+        activities,
+        pending,
+        activities.c.follow_up_date.between(TODAY, TODAY + timedelta(days=7)),
+    )
     assert overdue >= 3
     assert soon >= 3
 

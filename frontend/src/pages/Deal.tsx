@@ -26,30 +26,80 @@ export function Deal() {
   if (!deal) return null;
 
   function changeStage(stage: Stage) {
-    move.mutate({ id, stage, index: 0 }, { onSuccess: () => toast(`Moved to ${stage}`) });
+    move.mutate(
+      { id, stage, index: 0 },
+      { onSuccess: () => toast(`Moved to ${stage}`) },
+    );
   }
 
   const late = isLate(deal, new Date());
   return (
     <>
-      <RecordTitle name={deal.name} onEdit={() => setEditing(true)} onDelete={() => setDeleting(true)}
-        badges={<>{<StageBadge stage={deal.stage} />}{late && <LateBadge />}</>} />
+      <RecordTitle
+        name={deal.name}
+        onEdit={() => setEditing(true)}
+        onDelete={() => setDeleting(true)}
+        badges={
+          <>
+            {<StageBadge stage={deal.stage} />}
+            {late && <LateBadge />}
+          </>
+        }
+      />
       <div className="record-grid">
-        <Panel title="Details" sub={late ? <span className="late">This deal is past its close date.</span> : undefined}>
+        <Panel
+          title="Details"
+          sub={
+            late ? (
+              <span className="late">This deal is past its close date.</span>
+            ) : undefined
+          }
+        >
           <label className="field stage-select">
             <span className="field-label">Stage</span>
-            <select value={deal.stage} onChange={(e) => changeStage(e.target.value as Stage)} disabled={move.isPending}>
-              {STAGES.map((s) => <option key={s}>{s}</option>)}
+            <select
+              value={deal.stage}
+              onChange={(e) => changeStage(e.target.value as Stage)}
+              disabled={move.isPending}
+            >
+              {STAGES.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
             </select>
           </label>
-          <Details items={[
-            ["Value", <span className="mono">{formatMoney(deal.value)}</span>],
-            ["Probability", <span className="mono">{deal.probability}%</span>],
-            ["Expected revenue", <span className="mono">{formatMoney(expectedRevenue(deal))}</span>],
-            ["Close date", <CloseDate deal={deal} />],
-            ["Organization", <MaybeLink to={`/organizations/${deal.organization_id}`} name={deal.organization_name} />],
-            ["Main contact", <MaybeLink to={`/contacts/${deal.contact_id}`} name={deal.contact_name} />],
-          ]} />
+          <Details
+            items={[
+              [
+                "Value",
+                <span className="mono">{formatMoney(deal.value)}</span>,
+              ],
+              [
+                "Probability",
+                <span className="mono">{deal.probability}%</span>,
+              ],
+              [
+                "Expected revenue",
+                <span className="mono">
+                  {formatMoney(expectedRevenue(deal))}
+                </span>,
+              ],
+              ["Close date", <CloseDate deal={deal} />],
+              [
+                "Organization",
+                <MaybeLink
+                  to={`/organizations/${deal.organization_id}`}
+                  name={deal.organization_name}
+                />,
+              ],
+              [
+                "Main contact",
+                <MaybeLink
+                  to={`/contacts/${deal.contact_id}`}
+                  name={deal.contact_name}
+                />,
+              ],
+            ]}
+          />
         </Panel>
         <Panel title="Timeline" sub="Newest first">
           <LogActivity dealId={id} />
@@ -58,8 +108,13 @@ export function Deal() {
       </div>
       {editing && <DealForm initial={deal} onDone={() => setEditing(false)} />}
       {deleting && (
-        <ConfirmDelete kind="deals" id={id} name={deal.name} onClose={() => setDeleting(false)}
-          onDeleted={() => navigate("/deals")} />
+        <ConfirmDelete
+          kind="deals"
+          id={id}
+          name={deal.name}
+          onClose={() => setDeleting(false)}
+          onDeleted={() => navigate("/deals")}
+        />
       )}
     </>
   );

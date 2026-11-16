@@ -3,11 +3,26 @@
 import os
 from datetime import date, datetime
 from pathlib import Path
+from typing import Annotated
 
-from fastapi import HTTPException, Request
+from fastapi import Depends, HTTPException, Request
 from sqlalchemy import (
-    Boolean, Column, Connection, Date, DateTime, Engine, ForeignKey, Integer, MetaData, String,
-    Table, Text, create_engine, event, select,
+    Boolean,
+    Column,
+    Connection,
+    Date,
+    DateTime,
+    Engine,
+    ForeignKey,
+    Integer,
+    MetaData,
+    String,
+    Table,
+    Text,
+    create_engine,
+    event,
+    insert,
+    select,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,12 +34,19 @@ def timestamps() -> list[Column]:
     """The created_at and updated_at columns every table has."""
     return [
         Column("created_at", DateTime, nullable=False, default=datetime.now),
-        Column("updated_at", DateTime, nullable=False, default=datetime.now, onupdate=datetime.now),
+        Column(
+            "updated_at",
+            DateTime,
+            nullable=False,
+            default=datetime.now,
+            onupdate=datetime.now,
+        ),
     ]
 
 
 organizations = Table(
-    "organizations", metadata,
+    "organizations",
+    metadata,
     Column("id", Integer, primary_key=True),
     Column("name", String, nullable=False),
     Column("website", String),
@@ -34,7 +56,8 @@ organizations = Table(
 )
 
 contacts = Table(
-    "contacts", metadata,
+    "contacts",
+    metadata,
     Column("id", Integer, primary_key=True),
     Column("name", String, nullable=False),
     Column("email", String),
@@ -46,7 +69,8 @@ contacts = Table(
 )
 
 deals = Table(
-    "deals", metadata,
+    "deals",
+    metadata,
     Column("id", Integer, primary_key=True),
     Column("name", String, nullable=False),
     Column("organization_id", ForeignKey("organizations.id"), index=True),
@@ -60,7 +84,8 @@ deals = Table(
 )
 
 activities = Table(
-    "activities", metadata,
+    "activities",
+    metadata,
     Column("id", Integer, primary_key=True),
     Column("type", String, nullable=False),
     Column("contact_id", ForeignKey("contacts.id"), index=True),
@@ -83,7 +108,9 @@ def engine_for(path: Path) -> Engine:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     engine = create_engine(f"sqlite:///{path}")
-    event.listen(engine, "connect", lambda dbapi, _: dbapi.execute("PRAGMA foreign_keys = ON"))
+    event.listen(
+        engine, "connect", lambda dbapi, _: dbapi.execute("PRAGMA foreign_keys = ON")
+    )
     return engine
 
 
@@ -104,3 +131,14 @@ def get_or_404(conn: Connection, table: Table, record_id: int) -> dict:
     if row is None:
         raise HTTPException(404, "Not found")
     return dict(row)
+
+
+DbConn = Annotated[Connection, Depends(get_conn)]
+Today = Annotated[date, Depends(get_today)]
+
+
+def insert_row(conn: Connection, table: Table, values: dict) -> int:
+    """Insert one row and return its new id."""
+    return conn.execute(
+        insert(table).values(**values).returning(table.c.id)
+    ).scalar_one()

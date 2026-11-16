@@ -39,7 +39,10 @@ const features = tableFeatures({
   sortedRowModel: createSortedRowModel(),
 });
 
-const collator = new Intl.Collator("en", { sensitivity: "base", numeric: true });
+const collator = new Intl.Collator("en", {
+  sensitivity: "base",
+  numeric: true,
+});
 
 function compare(a: unknown, b: unknown) {
   if (typeof a === "number" && typeof b === "number") return a - b;
@@ -48,20 +51,26 @@ function compare(a: unknown, b: unknown) {
 
 /** A searchable, sortable table with a count line and an empty state. */
 export function DataTable<T extends { id: number }>(props: Props<T>) {
-  const { columns, rows, defaultSort, noun, searchPlaceholder, actions, toolbar } = props;
+  const {
+    columns,
+    rows,
+    defaultSort,
+    noun,
+    searchPlaceholder,
+    actions,
+    toolbar,
+  } = props;
   const [search, setSearch] = useState("");
 
   const defs = useMemo(
     () =>
-      columns.map(
-        (c): ColumnDef<typeof features, T> => ({
-          id: c.id,
-          header: c.header,
-          accessorFn: c.sort ?? c.text,
-          sortFn: (a, b, id) => compare(a.getValue(id), b.getValue(id)),
-          sortDescFirst: false,
-        }),
-      ),
+      columns.map((c): ColumnDef<typeof features, T> => ({
+        id: c.id,
+        header: c.header,
+        accessorFn: c.sort ?? c.text,
+        sortFn: (a, b, id) => compare(a.getValue(id), b.getValue(id)),
+        sortDescFirst: false,
+      })),
     [columns],
   );
   const byId = useMemo(() => new Map(columns.map((c) => [c.id, c])), [columns]);
@@ -77,7 +86,11 @@ export function DataTable<T extends { id: number }>(props: Props<T>) {
     onGlobalFilterChange: setSearch,
     getColumnCanGlobalFilter: () => true,
     globalFilterFn: (row, columnId, value: string) =>
-      byId.get(columnId)!.text(row.original).toLowerCase().includes(value.toLowerCase()),
+      byId
+        .get(columnId)!
+        .text(row.original)
+        .toLowerCase()
+        .includes(value.toLowerCase()),
   });
 
   const shown = table.getRowModel().rows;
@@ -102,10 +115,26 @@ export function DataTable<T extends { id: number }>(props: Props<T>) {
             {table.getFlatHeaders().map((header) => {
               const sorted = header.column.getIsSorted();
               return (
-                <th key={header.id} className={byId.get(header.id)!.className} aria-sort={sorted ? (sorted === "asc" ? "ascending" : "descending") : undefined}>
-                  <button type="button" className="sort" onClick={header.column.getToggleSortingHandler()}>
+                <th
+                  key={header.id}
+                  className={byId.get(header.id)!.className}
+                  aria-sort={
+                    sorted
+                      ? sorted === "asc"
+                        ? "ascending"
+                        : "descending"
+                      : undefined
+                  }
+                >
+                  <button
+                    type="button"
+                    className="sort"
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
                     {byId.get(header.id)!.header}
-                    <span className="arrow">{sorted === "asc" ? "↑" : sorted === "desc" ? "↓" : ""}</span>
+                    <span className="arrow">
+                      {sorted === "asc" ? "↑" : sorted === "desc" ? "↓" : ""}
+                    </span>
                   </button>
                 </th>
               );
@@ -114,7 +143,14 @@ export function DataTable<T extends { id: number }>(props: Props<T>) {
           </tr>
         </thead>
         <tbody ref={bodyRef}>
-          {padTop > 0 && <tr aria-hidden="true"><td colSpan={span} style={{ height: padTop, padding: 0, border: 0 }} /></tr>}
+          {padTop > 0 && (
+            <tr aria-hidden="true">
+              <td
+                colSpan={span}
+                style={{ height: padTop, padding: 0, border: 0 }}
+              />
+            </tr>
+          )}
           {visible.map(({ row, index }) => (
             <tr key={row.id} ref={measure} data-index={index}>
               {columns.map((c) => (
@@ -122,18 +158,35 @@ export function DataTable<T extends { id: number }>(props: Props<T>) {
                   {c.cell ? c.cell(row.original) : c.text(row.original)}
                 </td>
               ))}
-              {actions && <td className="row-actions">{actions(row.original)}</td>}
+              {actions && (
+                <td className="row-actions">{actions(row.original)}</td>
+              )}
             </tr>
           ))}
-          {padBottom > 0 && <tr aria-hidden="true"><td colSpan={span} style={{ height: padBottom, padding: 0, border: 0 }} /></tr>}
+          {padBottom > 0 && (
+            <tr aria-hidden="true">
+              <td
+                colSpan={span}
+                style={{ height: padBottom, padding: 0, border: 0 }}
+              />
+            </tr>
+          )}
         </tbody>
       </table>
       {shown.length === 0 && (
         <div className="empty">
           {search ? (
             <>
-              <p>No {noun} match “{search}”.</p>
-              <button type="button" className="btn quiet" onClick={() => setSearch("")}>Clear search</button>
+              <p>
+                No {noun} match “{search}”.
+              </p>
+              <button
+                type="button"
+                className="btn quiet"
+                onClick={() => setSearch("")}
+              >
+                Clear search
+              </button>
             </>
           ) : (
             <p>No {noun} yet.</p>

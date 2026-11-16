@@ -21,6 +21,9 @@ test("an untouched Happened at means the moment the activity is logged", async (
   await user.type(screen.getByLabelText(/Description/), "Called back");
   await user.click(screen.getByRole("button", { name: "Log activity" }));
   await waitFor(() => expect(fetchMock).toHaveBeenCalled());
-  const body = JSON.parse((fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].body as string);
+  const body = JSON.parse(
+    (fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1]
+      .body as string,
+  );
   expect(body.happened_at).toBe("2026-11-15T11:30");
 });

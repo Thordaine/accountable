@@ -39,8 +39,8 @@ test("a salesperson's day, end to end", async ({ page }) => {
 
   await test.step("move the deal across the pipeline to Won", async () => {
     await page.getByRole("link", { name: "Pipeline" }).click();
-    const card = (stage: string) => page.getByRole("region", { name: stage, exact: true }).locator("li.card-slot");
-    const ours = page.locator("li.card-slot", { hasText: "Northwind oven monitoring" });
+    const card = (stage: string) => page.getByRole("region", { name: stage, exact: true }).locator(".card-slot");
+    const ours = page.locator(".card-slot", { hasText: "Northwind oven monitoring" });
     for (const [from, to] of [["New", "Qualified"], ["Qualified", "Proposal"], ["Proposal", "Negotiation"], ["Negotiation", "Won"]]) {
       await expect(card(from).filter({ hasText: "Northwind oven monitoring" })).toBeVisible();
       const saved = page.waitForResponse("**/api/deals/*/move");
@@ -51,7 +51,7 @@ test("a salesperson's day, end to end", async ({ page }) => {
   });
 
   await test.step("log a call with a follow-up on the deal", async () => {
-    await page.locator("li.card-slot", { hasText: "Northwind oven monitoring" }).click();
+    await page.locator(".card-slot", { hasText: "Northwind oven monitoring" }).click();
     await expect(page.locator(".timeline")).toContainText("Moved from Negotiation to Won");
     const log = page.getByRole("form", { name: "Log an activity" });
     await log.getByRole("button", { name: "Call" }).click();

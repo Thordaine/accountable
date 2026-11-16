@@ -2,12 +2,18 @@
 
 from datetime import date, timedelta
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from sqlalchemy import Connection, select
 
 from accountable.activities import activity_query
-from accountable.db import activities, deals, get_conn, get_today
-from accountable.schemas import OPEN_STAGES, STAGES, Dashboard, OpenFigures, StageFigures
+from accountable.db import DbConn, Today, activities, deals
+from accountable.schemas import (
+    OPEN_STAGES,
+    STAGES,
+    Dashboard,
+    OpenFigures,
+    StageFigures,
+)
 
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
@@ -66,7 +72,10 @@ def funnel(all_deals) -> list[dict]:
     """For New to Won, the value of non-Lost deals at that stage or further along."""
     reached = [d for d in all_deals if d["stage"] != "Lost"]
     return [
-        {"stage": stage, "value": sum(d["value"] for d in reached if STAGES.index(d["stage"]) >= i)}
+        {
+            "stage": stage,
+            "value": sum(d["value"] for d in reached if STAGES.index(d["stage"]) >= i),
+        }
         for i, stage in enumerate(STAGES[:5])
     ]
 
@@ -74,7 +83,11 @@ def funnel(all_deals) -> list[dict]:
 def record_link(activity) -> dict:
     """The contact or deal an activity is logged on."""
     if activity["contact_id"] is not None:
-        return {"kind": "contact", "id": activity["contact_id"], "name": activity["contact_name"]}
+        return {
+            "kind": "contact",
+            "id": activity["contact_id"],
+            "name": activity["contact_name"],
+        }
     return {"kind": "deal", "id": activity["deal_id"], "name": activity["deal_name"]}
 
 
@@ -82,20 +95,31 @@ def follow_ups(conn: Connection, today: date) -> list[dict]:
     """Follow-ups not done that are overdue or due in the next 7 days, soonest first."""
     query = (
         activity_query()
-        .where(activities.c.done.is_(False), activities.c.follow_up_date <= today + timedelta(days=7))
+        .where(
+            activities.c.done.is_(False),
+            activities.c.follow_up_date <= today + timedelta(days=7),
+        )
         .order_by(None)
         .order_by(activities.c.follow_up_date, activities.c.id)
     )
     return [
-        {"activity_id": a["id"], "description": a["description"], "follow_up_date": a["follow_up_date"],
-         "overdue": a["follow_up_date"] < today, "record": record_link(a)}
+        {
+            "activity_id": a["id"],
+            "description": a["description"],
+            "follow_up_date": a["follow_up_date"],
+            "overdue": a["follow_up_date"] < today,
+            "record": record_link(a),
+        }
         for a in conn.execute(query).mappings()
     ]
 
 
 def recent(conn: Connection) -> list[dict]:
     """The 10 newest timeline entries across the app."""
-    return [{**a, "record": record_link(a)} for a in conn.execute(activity_query().limit(10)).mappings()]
+    return [
+        {**a, "record": record_link(a)}
+        for a in conn.execute(activity_query().limit(10)).mappings()
+    ]
 
 
 def figures(conn: Connection, today: date) -> Dashboard:
@@ -113,5 +137,5 @@ def figures(conn: Connection, today: date) -> Dashboard:
 
 
 @router.get("", response_model=Dashboard)
-def read_dashboard(conn: Connection = Depends(get_conn), today: date = Depends(get_today)):
+def read_dashboard(conn: DbConn, today: Today):
     return figures(conn, today)

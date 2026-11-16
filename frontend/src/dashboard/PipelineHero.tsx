@@ -13,27 +13,55 @@ export function PipelineHero({ open, winRate }: Props) {
       <div className="hero-head">
         <div>
           <h2 id="hero-title">Open pipeline</h2>
-          <div className="big"><small>US$</small>{Math.round(open.value).toLocaleString("en-US")}</div>
+          <div className="big">
+            <small>US$</small>
+            {Math.round(open.value).toLocaleString("en-US")}
+          </div>
         </div>
         <div className="hero-side">
-          <div><div className="v">{formatMoney(open.expected)}</div><div className="l">Expected revenue</div></div>
+          <div>
+            <div className="v">{formatMoney(open.expected)}</div>
+            <div className="l">Expected revenue</div>
+          </div>
           <div>
             <div className="v">{open.count}</div>
-            <div className="l">Open deals{open.late > 0 && <>, <span className="late">{open.late} late</span></>}</div>
+            <div className="l">
+              Open deals
+              {open.late > 0 && (
+                <>
+                  , <span className="late">{open.late} late</span>
+                </>
+              )}
+            </div>
           </div>
-          <div><div className="v">{winRate === null ? "—" : `${winRate}%`}</div><div className="l">Win rate, last 12 months</div></div>
+          <div>
+            <div className="v">{winRate === null ? "—" : `${winRate}%`}</div>
+            <div className="l">Win rate, last 12 months</div>
+          </div>
         </div>
       </div>
-      {stages.length === 0 ? <div className="river empty-river">No open deals</div> : (
+      {stages.length === 0 ? (
+        <div className="river empty-river">No open deals</div>
+      ) : (
         <div className="river">
           {stages.map((s) => (
-            <Link key={s.stage} to="/pipeline" className={`seg${DARK_STAGES.includes(s.stage) ? " dark" : ""}`}
-              style={{ flexGrow: s.value, background: STAGE_COLOR[s.stage] }}>
-              <span className="exp" style={{ height: `${s.value ? (s.expected / s.value) * 100 : 0}%` }} />
+            <Link
+              key={s.stage}
+              to="/pipeline"
+              className={`seg${DARK_STAGES.includes(s.stage) ? " dark" : ""}`}
+              style={{ flexGrow: s.value, background: STAGE_COLOR[s.stage] }}
+            >
+              <span
+                className="exp"
+                style={{
+                  height: `${s.value ? (s.expected / s.value) * 100 : 0}%`,
+                }}
+              />
               <span className="name">{s.stage}</span>
               <span className="nums">
                 <b>{formatMoneyShort(s.value)}</b>
-                {s.count} {s.count === 1 ? "deal" : "deals"}<br />
+                {s.count} {s.count === 1 ? "deal" : "deals"}
+                <br />
                 {formatMoneyShort(s.expected)} expected
               </span>
             </Link>
@@ -41,8 +69,14 @@ export function PipelineHero({ open, winRate }: Props) {
         </div>
       )}
       <div className="key">
-        <span><i style={{ background: "var(--mist)" }} />Value of deals at each stage</span>
-        <span><i style={{ background: "#9DB1B7" }} />Darker part: expected revenue</span>
+        <span>
+          <i style={{ background: "var(--mist)" }} />
+          Value of deals at each stage
+        </span>
+        <span>
+          <i style={{ background: "#9DB1B7" }} />
+          Darker part: expected revenue
+        </span>
       </div>
     </section>
   );

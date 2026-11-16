@@ -17,12 +17,22 @@ const columns: Col<Org>[] = [
 ];
 
 function setup() {
-  render(<DataTable columns={columns} rows={rows} defaultSort="industry" noun="organizations" />);
+  render(
+    <DataTable
+      columns={columns}
+      rows={rows}
+      defaultSort="industry"
+      noun="organizations"
+    />,
+  );
   return userEvent.setup();
 }
 
 const names = () =>
-  screen.getAllByRole("row").slice(1).map((row) => within(row).getAllByRole("cell")[0].textContent);
+  screen
+    .getAllByRole("row")
+    .slice(1)
+    .map((row) => within(row).getAllByRole("cell")[0].textContent);
 
 test("search matches shown text, ignoring case and accents typed in capitals", async () => {
   const user = setup();
@@ -42,16 +52,39 @@ test("odd search text is plain text and shows the empty state", async () => {
 
 test("clicking a heading sorts ascending, then descending", async () => {
   const user = setup();
-  expect(names()).toEqual(["Ashby Engineering", "Café Linde", "Halden Freight"]);
+  expect(names()).toEqual([
+    "Ashby Engineering",
+    "Café Linde",
+    "Halden Freight",
+  ]);
   await user.click(screen.getByRole("button", { name: /Name/ }));
-  expect(names()).toEqual(["Ashby Engineering", "Café Linde", "Halden Freight"]);
+  expect(names()).toEqual([
+    "Ashby Engineering",
+    "Café Linde",
+    "Halden Freight",
+  ]);
   await user.click(screen.getByRole("button", { name: /Name/ }));
-  expect(names()).toEqual(["Halden Freight", "Café Linde", "Ashby Engineering"]);
+  expect(names()).toEqual([
+    "Halden Freight",
+    "Café Linde",
+    "Ashby Engineering",
+  ]);
 });
 
 test("a long table renders only rows near the screen, but searches and counts all of them", async () => {
-  const many = Array.from({ length: 300 }, (_, i) => ({ id: i + 1, name: `Row ${String(i).padStart(4, "0")}`, industry: "Retail" }));
-  render(<DataTable columns={columns} rows={many} defaultSort="name" noun="organizations" />);
+  const many = Array.from({ length: 300 }, (_, i) => ({
+    id: i + 1,
+    name: `Row ${String(i).padStart(4, "0")}`,
+    industry: "Retail",
+  }));
+  render(
+    <DataTable
+      columns={columns}
+      rows={many}
+      defaultSort="name"
+      noun="organizations"
+    />,
+  );
   expect(screen.getByText("300 of 300 organizations")).toBeInTheDocument();
   expect(names().length).toBeLessThan(300);
   await userEvent.setup().type(screen.getByRole("searchbox"), "Row 0299");

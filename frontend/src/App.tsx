@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createBrowserRouter, Outlet } from "react-router";
+import { createBrowserRouter, Outlet, type RouteObject } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { Toaster } from "sonner";
 import { NavBar } from "./components/NavBar";
@@ -24,7 +24,8 @@ function Layout() {
   );
 }
 
-const router = createBrowserRouter([
+/** The pages, each inside the nav bar layout. */
+export const routes: RouteObject[] = [
   {
     Component: Layout,
     children: [
@@ -38,7 +39,9 @@ const router = createBrowserRouter([
       { path: "pipeline", Component: Pipeline },
     ],
   },
-]);
+];
+
+const router = createBrowserRouter(routes);
 
 /** Providers and routes. */
 export default function App() {

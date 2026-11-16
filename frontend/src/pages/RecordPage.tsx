@@ -1,7 +1,12 @@
 import type { ReactNode } from "react";
 
 /** A record page's heading with Edit and Delete. */
-export function RecordTitle({ name, badges, onEdit, onDelete }: {
+export function RecordTitle({
+  name,
+  badges,
+  onEdit,
+  onDelete,
+}: {
   name: string;
   badges?: ReactNode;
   onEdit: () => void;
@@ -12,8 +17,16 @@ export function RecordTitle({ name, badges, onEdit, onDelete }: {
       <h1>{name}</h1>
       {badges}
       <div className="actions">
-        <button type="button" className="btn quiet" onClick={onEdit}>Edit</button>
-        <button type="button" className="btn quiet danger-text" onClick={onDelete}>Delete</button>
+        <button type="button" className="btn quiet" onClick={onEdit}>
+          Edit
+        </button>
+        <button
+          type="button"
+          className="btn quiet danger-text"
+          onClick={onDelete}
+        >
+          Delete
+        </button>
       </div>
     </div>
   );
@@ -34,7 +47,12 @@ export function Details({ items }: { items: [string, ReactNode][] }) {
 }
 
 /** A panel with a heading and an optional action on the right. */
-export function Panel({ title, sub, action, children }: {
+export function Panel({
+  title,
+  sub,
+  action,
+  children,
+}: {
   title: string;
   sub?: ReactNode;
   action?: ReactNode;

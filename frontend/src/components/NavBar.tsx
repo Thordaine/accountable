@@ -25,7 +25,9 @@ export function NavBar() {
           </NavLink>
         ))}
       </div>
-      <button className="btn" type="button" onClick={() => setAdding(true)}>Add deal</button>
+      <button className="btn" type="button" onClick={() => setAdding(true)}>
+        Add deal
+      </button>
       {adding && <DealForm onDone={() => setAdding(false)} />}
     </nav>
   );

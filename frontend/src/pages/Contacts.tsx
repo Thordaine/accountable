@@ -10,23 +10,58 @@ import { ContactForm } from "../forms/ContactForm";
 import { STATUSES, type Status } from "../lib/stages";
 
 const columns: Col<Contact>[] = [
-  { id: "name", header: "Name", text: (c) => c.name, cell: (c) => <Link to={`/contacts/${c.id}`}>{c.name}</Link> },
   {
-    id: "organization", header: "Organization", text: (c) => c.organization_name ?? "—",
-    cell: (c) => <MaybeLink to={`/organizations/${c.organization_id}`} name={c.organization_name} />,
+    id: "name",
+    header: "Name",
+    text: (c) => c.name,
+    cell: (c) => <Link to={`/contacts/${c.id}`}>{c.name}</Link>,
+  },
+  {
+    id: "organization",
+    header: "Organization",
+    text: (c) => c.organization_name ?? "—",
+    cell: (c) => (
+      <MaybeLink
+        to={`/organizations/${c.organization_id}`}
+        name={c.organization_name}
+      />
+    ),
   },
   { id: "job_title", header: "Job title", text: (c) => c.job_title ?? "—" },
   { id: "email", header: "Email", text: (c) => c.email ?? "—" },
-  { id: "phone", header: "Phone", text: (c) => c.phone ?? "—", className: "mono" },
-  { id: "status", header: "Status", text: (c) => c.status, cell: (c) => <StatusBadge status={c.status} /> },
+  {
+    id: "phone",
+    header: "Phone",
+    text: (c) => c.phone ?? "—",
+    className: "mono",
+  },
+  {
+    id: "status",
+    header: "Status",
+    text: (c) => c.status,
+    cell: (c) => <StatusBadge status={c.status} />,
+  },
 ];
 
 /** All, Lead, Qualified or Customer. */
-function StatusFilter({ value, onChange }: { value: Status | "All"; onChange: (s: Status | "All") => void }) {
+function StatusFilter({
+  value,
+  onChange,
+}: {
+  value: Status | "All";
+  onChange: (s: Status | "All") => void;
+}) {
   return (
     <div className="segmented" role="group" aria-label="Filter by status">
       {(["All", ...STATUSES] as const).map((s) => (
-        <button key={s} type="button" aria-pressed={value === s} onClick={() => onChange(s)}>{s}</button>
+        <button
+          key={s}
+          type="button"
+          aria-pressed={value === s}
+          onClick={() => onChange(s)}
+        >
+          {s}
+        </button>
       ))}
     </div>
   );
@@ -44,16 +79,45 @@ export function Contacts() {
       <div className="title">
         <h1>Contacts</h1>
         <div className="actions">
-          <button type="button" className="btn" onClick={() => setEditing("new")}>Add contact</button>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setEditing("new")}
+          >
+            Add contact
+          </button>
         </div>
       </div>
       {rows && (
-        <DataTable columns={columns} rows={rows} defaultSort="name" noun="contacts"
+        <DataTable
+          columns={columns}
+          rows={rows}
+          defaultSort="name"
+          noun="contacts"
           toolbar={<StatusFilter value={status} onChange={setStatus} />}
-          actions={(c) => <RowActions name={c.name} onEdit={() => setEditing(c)} onDelete={() => setDeleting(c)} />} />
+          actions={(c) => (
+            <RowActions
+              name={c.name}
+              onEdit={() => setEditing(c)}
+              onDelete={() => setDeleting(c)}
+            />
+          )}
+        />
       )}
-      {editing && <ContactForm initial={editing === "new" ? undefined : editing} onDone={() => setEditing(null)} />}
-      {deleting && <ConfirmDelete kind="contacts" id={deleting.id} name={deleting.name} onClose={() => setDeleting(null)} />}
+      {editing && (
+        <ContactForm
+          initial={editing === "new" ? undefined : editing}
+          onDone={() => setEditing(null)}
+        />
+      )}
+      {deleting && (
+        <ConfirmDelete
+          kind="contacts"
+          id={deleting.id}
+          name={deleting.name}
+          onClose={() => setDeleting(null)}
+        />
+      )}
     </>
   );
 }

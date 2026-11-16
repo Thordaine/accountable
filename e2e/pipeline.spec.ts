@@ -2,7 +2,7 @@ import type { Page } from "@playwright/test";
 import { drag, expect, test } from "./fixtures";
 
 const column = (page: Page, stage: string) => page.getByRole("region", { name: stage, exact: true });
-const cards = (page: Page, stage: string) => column(page, stage).locator("li.card-slot");
+const cards = (page: Page, stage: string) => column(page, stage).locator(".card-slot");
 const count = async (page: Page, stage: string) => Number(await column(page, stage).getByTestId("count").textContent());
 
 test("dragging to another column updates figures at once and saves the place", async ({ page }) => {
@@ -57,11 +57,37 @@ test("a deal added in a column starts at the top of that stage", async ({ page }
 
 test("late cards show Late, and a click opens the deal", async ({ page }) => {
   await page.goto("/pipeline");
-  const late = page.locator("li.card-slot").filter({ has: page.locator(".card.is-late") }).first();
+  const late = page.locator(".card-slot").filter({ has: page.locator(".card.is-late") }).first();
   await expect(late).toContainText("Late");
   const name = (await late.getAttribute("aria-label"))!;
   await late.click();
   await expect(page.getByRole("heading", { name })).toBeVisible();
+});
+
+test("Enter on a focused card opens the deal", async ({ page }) => {
+  await page.goto("/pipeline");
+  const card = cards(page, "New").first();
+  const name = (await card.getAttribute("aria-label"))!;
+  await card.focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByRole("heading", { name })).toBeVisible();
+});
+
+test("a card dragged with the keyboard moves to the next column", async ({ page }) => {
+  await page.goto("/pipeline");
+  const card = cards(page, "New").first();
+  const name = (await card.getAttribute("aria-label"))!;
+  const saved = page.waitForResponse("**/api/deals/*/move");
+  await card.focus();
+  await page.keyboard.press("Space");
+  await expect(card).toHaveClass(/placeholder/);
+  await page.keyboard.press("ArrowRight");
+  const moved = cards(page, "Qualified").filter({ hasText: name });
+  await expect(moved).toHaveCount(1);
+  await page.keyboard.press("Space");
+  await saved;
+  await expect(moved).not.toHaveClass(/placeholder/);
+  await expect(page).toHaveURL(/\/pipeline$/);
 });
 
 test("a long column shows its first 40 cards and the rest on request", async ({ page }) => {

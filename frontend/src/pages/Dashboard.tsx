@@ -24,22 +24,48 @@ export function Dashboard() {
               <div className="chart-head">
                 <div>
                   <h2>Revenue won</h2>
-                  <p className="sub">Per month, {monthName(data.months[0])} to {monthName(data.months[11])}</p>
+                  <p className="sub">
+                    Per month, {monthName(data.months[0])} to{" "}
+                    {monthName(data.months[11])}
+                  </p>
                 </div>
-                <div><div className="v" data-testid="revenue-total">{formatMoney(sum(data.revenue_won))}</div><div className="l">Last 12 months</div></div>
+                <div>
+                  <div className="v" data-testid="revenue-total">
+                    {formatMoney(sum(data.revenue_won))}
+                  </div>
+                  <div className="l">Last 12 months</div>
+                </div>
               </div>
               <RevenueChart months={data.months} revenue={data.revenue_won} />
             </section>
             <section className="panel" aria-label="Deals won and lost">
               <div className="chart-head">
-                <div><h2>Deals won and lost</h2><p className="sub">Per month</p></div>
-                <div><div className="v">{sum(data.won)} / {sum(data.lost)}</div><div className="l">Won / lost</div></div>
+                <div>
+                  <h2>Deals won and lost</h2>
+                  <p className="sub">Per month</p>
+                </div>
+                <div>
+                  <div className="v">
+                    {sum(data.won)} / {sum(data.lost)}
+                  </div>
+                  <div className="l">Won / lost</div>
+                </div>
               </div>
               <div className="legend">
-                <span><i style={{ background: "var(--ink)" }} />Won</span>
-                <span><i style={{ background: "var(--rasp)" }} />Lost</span>
+                <span>
+                  <i style={{ background: "var(--ink)" }} />
+                  Won
+                </span>
+                <span>
+                  <i style={{ background: "var(--rasp)" }} />
+                  Lost
+                </span>
               </div>
-              <WinLossChart months={data.months} won={data.won} lost={data.lost} />
+              <WinLossChart
+                months={data.months}
+                won={data.won}
+                lost={data.lost}
+              />
             </section>
           </div>
           <div className="row r2">

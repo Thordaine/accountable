@@ -16,12 +16,24 @@ export function Pipeline() {
       <div className="title">
         <h1>Pipeline</h1>
         <div className="pipeline-totals">
-          <div><div className="v mono" data-testid="open-value">{formatMoney(open.value)}</div><div className="l">Open deals</div></div>
-          <div><div className="v mono" data-testid="open-expected">{formatMoney(open.expected)}</div><div className="l">Expected revenue</div></div>
+          <div>
+            <div className="v mono" data-testid="open-value">
+              {formatMoney(open.value)}
+            </div>
+            <div className="l">Open deals</div>
+          </div>
+          <div>
+            <div className="v mono" data-testid="open-expected">
+              {formatMoney(open.expected)}
+            </div>
+            <div className="l">Expected revenue</div>
+          </div>
         </div>
       </div>
       {data && <Board deals={data} onAdd={setAdding} />}
-      {adding && <DealForm defaults={{ stage: adding }} onDone={() => setAdding(null)} />}
+      {adding && (
+        <DealForm defaults={{ stage: adding }} onDone={() => setAdding(null)} />
+      )}
     </>
   );
 }

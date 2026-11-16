@@ -17,7 +17,13 @@ export function Funnel({ funnel }: { funnel: Dashboard["funnel"] }) {
       {funnel.map((f) => (
         <div key={f.stage} className="stair">
           <div className="v">{formatMoneyShort(f.value)}</div>
-          <div className="col" style={{ height: `${(f.value / top) * 82}%`, background: STAGE_COLOR[f.stage] }} />
+          <div
+            className="col"
+            style={{
+              height: `${(f.value / top) * 82}%`,
+              background: STAGE_COLOR[f.stage],
+            }}
+          />
           <div className="n">{f.stage}</div>
         </div>
       ))}
@@ -32,17 +38,27 @@ function FollowUpItem({ item }: { item: FollowUp }) {
   const [done, setLocalDone] = useState(false);
   function tick(checked: boolean) {
     setLocalDone(checked);
-    setDone.mutate({ id: item.activity_id, done: checked }, { onError: () => setLocalDone(!checked) });
+    setDone.mutate(
+      { id: item.activity_id, done: checked },
+      { onError: () => setLocalDone(!checked) },
+    );
   }
   return (
     <li>
-      <input type="checkbox" className="check" checked={done} onChange={(e) => tick(e.target.checked)}
-        aria-label={`Done: ${item.description}`} />
+      <input
+        type="checkbox"
+        className="check"
+        checked={done}
+        onChange={(e) => tick(e.target.checked)}
+        aria-label={`Done: ${item.description}`}
+      />
       <div>
         <div className="what">{item.description}</div>
         <div className="meta">
           <Link to={recordPath(item.record)}>{item.record.name}</Link>
-          <span className={`when${item.overdue ? " late" : ""}`}>{formatDue(item.follow_up_date, new Date())}</span>
+          <span className={`when${item.overdue ? " late" : ""}`}>
+            {formatDue(item.follow_up_date, new Date())}
+          </span>
         </div>
       </div>
     </li>
@@ -51,8 +67,15 @@ function FollowUpItem({ item }: { item: FollowUp }) {
 
 /** Follow-ups not done that are overdue or due in the next 7 days. */
 export function FollowUps({ items }: { items: Dashboard["follow_ups"] }) {
-  if (items.length === 0) return <p className="muted">Nothing due in the next 7 days.</p>;
-  return <ul className="list">{items.map((item) => <FollowUpItem key={item.activity_id} item={item} />)}</ul>;
+  if (items.length === 0)
+    return <p className="muted">Nothing due in the next 7 days.</p>;
+  return (
+    <ul className="list">
+      {items.map((item) => (
+        <FollowUpItem key={item.activity_id} item={item} />
+      ))}
+    </ul>
+  );
 }
 
 /** The pip color: the new stage or status for automatic entries, mist for the rest. */
@@ -81,9 +104,16 @@ export function RecentActivity({ items }: { items: Dashboard["recent"] }) {
     <ul className="list">
       {items.map((a) => (
         <li key={a.id}>
-          <span className="pip" style={{ background: pipColor(a.description, a.type) }} />
+          <span
+            className="pip"
+            style={{ background: pipColor(a.description, a.type) }}
+          />
           <div>
-            <div className="what">{a.type === "auto" ? a.description : `${typeLabel[a.type]}: ${a.description}`}</div>
+            <div className="what">
+              {a.type === "auto"
+                ? a.description
+                : `${typeLabel[a.type]}: ${a.description}`}
+            </div>
             <div className="meta">
               <Link to={recordPath(a.record)}>{a.record.name}</Link>
               <span className="when">{when(a.happened_at)}</span>

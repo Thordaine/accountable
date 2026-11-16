@@ -17,12 +17,18 @@
 - [ ] Test
 - [ ] Deploy
 
+## Harness (branch `harness`)
+
+- [x] Coding standards: `docs/STANDARDS.md`
+- [x] Checks: `npm run check` and `npm run check:quick` (formatting, linting, complexity, types, secrets, tests with 80% unit coverage), `npm run format`
+
 ## Run it
 
-Needs Node 24 or later, [uv](https://docs.astral.sh/uv/) and Google Chrome.
+Needs Node 24 or later, [uv](https://docs.astral.sh/uv/), Google Chrome and, for `npm run check`, [gitleaks](https://github.com/gitleaks/gitleaks) 8.25 or later.
 
 - `npm install` once, then `npm run dev` and open http://localhost:5173
-- `npm test` runs the backend, frontend and end-to-end tests (46 + 29 + 20)
+- `npm test` runs the backend, frontend and end-to-end tests (46 + 63 + 22)
+- `npm run check` runs every check and the tests; `npm run format` fixes the formatting
 - `npm run seed` resets the data to the sample data
 
 The data lives in `data/accountable.db` (or the file named by `ACCOUNTABLE_DB`). A new database gets the sample data by itself.

@@ -1,18 +1,18 @@
 /* Brand tokens, from mockup B. */
 :root {
-  --page: #F0F4F5;
-  --panel: #FFFFFF;
-  --ink: #073B4C;
-  --muted: #5B7C87;
-  --line: #E4EBED;
-  --mist: #CDD8DB;
-  --sea: #06D6A0;
-  --sea-ink: #05936E;
-  --mari: #FFC145;
-  --mari-ink: #9A6B00;
-  --coral: #F78C6B;
-  --ceru: #118AB2;
-  --rasp: #EF476F;
+  --page: #f0f4f5;
+  --panel: #ffffff;
+  --ink: #073b4c;
+  --muted: #5b7c87;
+  --line: #e4ebed;
+  --mist: #cdd8db;
+  --sea: #06d6a0;
+  --sea-ink: #05936e;
+  --mari: #ffc145;
+  --mari-ink: #9a6b00;
+  --coral: #f78c6b;
+  --ceru: #118ab2;
+  --rasp: #ef476f;
 
   --stage-new: var(--sea);
   --stage-qualified: var(--mari);

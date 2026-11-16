@@ -11,14 +11,24 @@ export class ApiError extends Error {
 }
 
 function fieldMessages(detail: { loc: (string | number)[]; msg: string }[]) {
-  return Object.fromEntries(detail.map((d) => [String(d.loc.at(-1)), d.msg.replace(/^Value error, /, "")]));
+  return Object.fromEntries(
+    detail.map((d) => [
+      String(d.loc.at(-1)),
+      d.msg.replace(/^Value error, /, ""),
+    ]),
+  );
 }
 
 /** Call the JSON API; returns undefined for 204. */
-export async function api<T>(path: string, method = "GET", body?: unknown): Promise<T> {
+export async function api<T>(
+  path: string,
+  method = "GET",
+  body?: unknown,
+): Promise<T> {
   const response = await fetch(`/api${path}`, {
     method,
-    headers: body === undefined ? undefined : { "Content-Type": "application/json" },
+    headers:
+      body === undefined ? undefined : { "Content-Type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   if (!response.ok) {

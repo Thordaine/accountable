@@ -12,7 +12,15 @@ type Props = {
 };
 
 /** A modal form with Save and Cancel; Escape cancels. */
-export function FormDialog({ title, onClose, onSubmit, saving, submitLabel = "Save", danger, children }: Props) {
+export function FormDialog({
+  title,
+  onClose,
+  onSubmit,
+  saving,
+  submitLabel = "Save",
+  danger,
+  children,
+}: Props) {
   function submit(e: FormEvent) {
     e.preventDefault();
     onSubmit();
@@ -26,8 +34,14 @@ export function FormDialog({ title, onClose, onSubmit, saving, submitLabel = "Sa
           <form onSubmit={submit} noValidate>
             {children}
             <div className="dialog-actions">
-              <button type="button" className="btn quiet" onClick={onClose}>Cancel</button>
-              <button type="submit" className={danger ? "btn danger" : "btn"} disabled={saving}>
+              <button type="button" className="btn quiet" onClick={onClose}>
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className={danger ? "btn danger" : "btn"}
+                disabled={saving}
+              >
                 {submitLabel}
               </button>
             </div>
@@ -39,7 +53,12 @@ export function FormDialog({ title, onClose, onSubmit, saving, submitLabel = "Sa
 }
 
 /** A labelled form field with its error message. */
-export function Field({ label, required, error, children }: {
+export function Field({
+  label,
+  required,
+  error,
+  children,
+}: {
   label: string;
   required?: boolean;
   error?: string;
@@ -49,7 +68,12 @@ export function Field({ label, required, error, children }: {
     <label className="field">
       <span className="field-label">
         {label}
-        {required && <span className="required" aria-hidden="true"> *</span>}
+        {required && (
+          <span className="required" aria-hidden="true">
+            {" "}
+            *
+          </span>
+        )}
       </span>
       {children}
       {error && <span className="field-error">{error}</span>}
@@ -60,6 +84,8 @@ export function Field({ label, required, error, children }: {
 /** Errors for the required fields left empty. */
 export function missing(values: Record<string, unknown>, required: string[]) {
   return Object.fromEntries(
-    required.filter((k) => String(values[k] ?? "").trim() === "").map((k) => [k, "Required"]),
+    required
+      .filter((k) => String(values[k] ?? "").trim() === "")
+      .map((k) => [k, "Required"]),
   );
 }

@@ -12,12 +12,17 @@ const stages: Dashboard["open"]["stages"] = [
 ];
 const open = { value: 502250, expected: 246287.5, count: 16, late: 3, stages };
 const empty = {
-  value: 0, expected: 0, count: 0, late: 0,
+  value: 0,
+  expected: 0,
+  count: 0,
+  late: 0,
   stages: stages.map((s) => ({ ...s, count: 0, value: 0, expected: 0 })),
 };
 
 function renderHero(props: Parameters<typeof PipelineHero>[0]) {
-  const router = createMemoryRouter([{ path: "*", element: <PipelineHero {...props} /> }]);
+  const router = createMemoryRouter([
+    { path: "*", element: <PipelineHero {...props} /> },
+  ]);
   render(<RouterProvider router={router} />);
 }
 
@@ -36,7 +41,12 @@ test("each stage segment is as wide as its share of the value and links to the p
   renderHero({ open, winRate: 74 });
   const segments = screen.getAllByRole("link");
   expect(segments).toHaveLength(4);
-  expect(segments.map((s) => s.style.flexGrow)).toEqual(["63500", "115500", "125500", "197750"]);
+  expect(segments.map((s) => s.style.flexGrow)).toEqual([
+    "63500",
+    "115500",
+    "125500",
+    "197750",
+  ]);
   expect(segments[0]).toHaveAttribute("href", "/pipeline");
 });
 
@@ -48,8 +58,16 @@ test("no open deals and no win rate", () => {
 });
 
 test("a stage holding only US$0 deals shades nothing instead of dividing by zero", () => {
-  const zero = { ...open, stages: [{ stage: "New" as const, count: 2, value: 0, expected: 0 }, ...stages.slice(1)] };
+  const zero = {
+    ...open,
+    stages: [
+      { stage: "New" as const, count: 2, value: 0, expected: 0 },
+      ...stages.slice(1),
+    ],
+  };
   renderHero({ open: zero, winRate: 74 });
-  const shade = screen.getAllByRole("link")[0].querySelector(".exp") as HTMLElement;
+  const shade = screen
+    .getAllByRole("link")[0]
+    .querySelector(".exp") as HTMLElement;
   expect(shade.style.height).toBe("0%");
 });

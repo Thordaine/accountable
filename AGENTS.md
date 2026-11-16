@@ -18,12 +18,19 @@ Read only the current change's folder, the one named after the branch you're on.
 
 Update `docs/STATUS.md` when you finish a piece of work, and `docs/spec.md` when a change alters what the product does.
 
-## Testing
+## Checks
 
-Run `npm test` before saying a piece of work is done. It runs every suite, one after another, and fails if any test fails:
+Run `npm run check` before saying a piece of work is done. It runs every check below, one after another, and fails if any fails:
 
-- backend unit tests: `npm run test:backend` (pytest, `backend/tests/`)
-- frontend unit tests: `npm run test:frontend` (Vitest, `frontend/src/**/*.test.ts(x)`)
-- end-to-end tests: `npm run test:e2e` (Playwright with Google Chrome, `e2e/`; starts its own backend and frontend on ports 8100 and 5174, using `test-results/e2e.db`)
+- formatting: Prettier for `frontend/`, ruff format for `backend/`. `npm run format` fixes it
+- linting: ESLint with the recommended TypeScript, React Hooks and accessibility rules, and ruff check. No function may exceed a cyclomatic complexity of 15
+- types: tsc for `frontend/`, ty for `backend/`
+- secrets: gitleaks (8.25 or later) over the git history and the working tree. Only the git-ignored `.env` may hold secrets
+- tests: `npm test`, which fails if either unit test suite covers less than 80% of its lines:
+  - backend unit tests: `npm run test:backend` (pytest, `backend/tests/`)
+  - frontend unit tests: `npm run test:frontend` (Vitest, `frontend/src/**/*.test.ts(x)`)
+  - end-to-end tests: `npm run test:e2e` (Playwright with Google Chrome, `e2e/`; starts its own backend and frontend on ports 8100 and 5174, using `test-results/e2e.db`)
 
-A failing suite doesn't stop the others, so one run shows every failure.
+A failing check doesn't stop the others, so one run shows every failure. `npm run check:quick` runs the same checks without the end-to-end tests.
+
+Fix what a check finds; never weaken or switch off a rule to get past it. If a rule doesn't suit this project, ask first.

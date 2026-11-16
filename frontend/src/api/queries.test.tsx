@@ -15,5 +15,8 @@ test("moving a deal that isn't in a stale cached list still saves", async () => 
   const { result } = renderHook(() => useMoveDeal(), { wrapper });
   act(() => result.current.mutate({ id: 7, stage: "Qualified", index: 0 }));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
-  expect(fetchMock).toHaveBeenCalledWith("/api/deals/7/move", expect.objectContaining({ method: "POST" }));
+  expect(fetchMock).toHaveBeenCalledWith(
+    "/api/deals/7/move",
+    expect.objectContaining({ method: "POST" }),
+  );
 });

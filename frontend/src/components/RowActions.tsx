@@ -1,11 +1,31 @@
 import { Link } from "react-router";
 
 /** Edit and Delete for one row. */
-export function RowActions({ name, onEdit, onDelete }: { name: string; onEdit: () => void; onDelete: () => void }) {
+export function RowActions({
+  name,
+  onEdit,
+  onDelete,
+}: {
+  name: string;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
   return (
     <>
-      <button type="button" className="link-btn" aria-label={`Edit ${name}`} onClick={onEdit}>Edit</button>
-      <button type="button" className="link-btn danger" aria-label={`Delete ${name}`} onClick={onDelete}>
+      <button
+        type="button"
+        className="link-btn"
+        aria-label={`Edit ${name}`}
+        onClick={onEdit}
+      >
+        Edit
+      </button>
+      <button
+        type="button"
+        className="link-btn danger"
+        aria-label={`Delete ${name}`}
+        onClick={onDelete}
+      >
         Delete
       </button>
     </>

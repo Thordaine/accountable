@@ -12,7 +12,12 @@ export function OrganizationForm({ initial, onDone }: Props) {
     industry: initial?.industry ?? "",
     notes: initial?.notes ?? "",
   });
-  const { submit, errors, saving } = useFormSave<Organization>("organizations", "Organization", initial?.id, onDone);
+  const { submit, errors, saving } = useFormSave<Organization>(
+    "organizations",
+    "Organization",
+    initial?.id,
+    onDone,
+  );
 
   function save() {
     submit(values, ["name"], {
@@ -24,14 +29,22 @@ export function OrganizationForm({ initial, onDone }: Props) {
   }
 
   return (
-    <FormDialog title={initial ? "Edit organization" : "Add organization"} onClose={() => onDone()}
-      onSubmit={save} saving={saving}>
+    <FormDialog
+      title={initial ? "Edit organization" : "Add organization"}
+      onClose={() => onDone()}
+      onSubmit={save}
+      saving={saving}
+    >
       <Field label="Name" required error={errors.name}>
-        <input value={values.name} onChange={set("name")} autoFocus />
+        <input value={values.name} onChange={set("name")} data-autofocus />
       </Field>
       <div className="field-row">
         <Field label="Website" error={errors.website}>
-          <input value={values.website} onChange={set("website")} placeholder="example.com" />
+          <input
+            value={values.website}
+            onChange={set("website")}
+            placeholder="example.com"
+          />
         </Field>
         <Field label="Industry" error={errors.industry}>
           <input value={values.industry} onChange={set("industry")} />

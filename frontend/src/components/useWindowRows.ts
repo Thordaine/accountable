@@ -23,14 +23,25 @@ export function useWindowRows<T>(rows: T[]) {
     scrollMargin: offset,
     enabled,
   });
-  if (!enabled) return { bodyRef, visible: rows.map((row, index) => ({ row, index })), padTop: 0, padBottom: 0 };
+  if (!enabled)
+    return {
+      bodyRef,
+      visible: rows.map((row, index) => ({ row, index })),
+      padTop: 0,
+      padBottom: 0,
+    };
 
   const items = virtualizer.getVirtualItems();
   return {
     bodyRef,
     measure: virtualizer.measureElement,
-    visible: items.map((item) => ({ row: rows[item.index], index: item.index })),
+    visible: items.map((item) => ({
+      row: rows[item.index],
+      index: item.index,
+    })),
     padTop: items.length ? items[0].start - offset : 0,
-    padBottom: items.length ? virtualizer.getTotalSize() - items.at(-1)!.end : 0,
+    padBottom: items.length
+      ? virtualizer.getTotalSize() - items.at(-1)!.end
+      : 0,
   };
 }

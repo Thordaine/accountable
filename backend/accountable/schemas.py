@@ -2,16 +2,30 @@
 
 import re
 from datetime import date, datetime
-from typing import Annotated, Literal
+from typing import Annotated, Literal, get_args
 
-from pydantic import AfterValidator, BaseModel, BeforeValidator, Field, StringConstraints, model_validator
-
-STAGES = ["New", "Qualified", "Proposal", "Negotiation", "Won", "Lost"]
-OPEN_STAGES = STAGES[:4]
-USUAL_PROBABILITY = {"New": 10, "Qualified": 25, "Proposal": 50, "Negotiation": 75, "Won": 100, "Lost": 0}
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    BeforeValidator,
+    Field,
+    StringConstraints,
+    model_validator,
+)
 
 Stage = Literal["New", "Qualified", "Proposal", "Negotiation", "Won", "Lost"]
 Status = Literal["Lead", "Qualified", "Customer"]
+
+STAGES: list[Stage] = list(get_args(Stage))
+OPEN_STAGES = STAGES[:4]
+USUAL_PROBABILITY = {
+    "New": 10,
+    "Qualified": 25,
+    "Proposal": 50,
+    "Negotiation": 75,
+    "Won": 100,
+    "Lost": 0,
+}
 
 
 def blank_to_none(value):
@@ -27,12 +41,16 @@ Optional = Annotated[str | None, BeforeValidator(blank_to_none)]
 
 def looks_like_email(value: str | None) -> str | None:
     """Accept something@domain.tld, nothing stricter."""
-    if value is not None and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", value.strip()):
+    if value is not None and not re.fullmatch(
+        r"[^@\s]+@[^@\s]+\.[^@\s]+", value.strip()
+    ):
         raise ValueError("Doesn't look like an email address")
     return value and value.strip()
 
 
-Email = Annotated[str | None, BeforeValidator(blank_to_none), AfterValidator(looks_like_email)]
+Email = Annotated[
+    str | None, BeforeValidator(blank_to_none), AfterValidator(looks_like_email)
+]
 
 
 class Record(BaseModel):
@@ -68,17 +86,20 @@ class ContactOut(Record, ContactIn):
     organization_name: str | None = None
 
 
-class DealIn(BaseModel):
+class DealFields(BaseModel):
     name: Name
     organization_id: int | None = None
     contact_id: int | None = None
     stage: Stage = "New"
     value: int = Field(0, ge=0)
+
+
+class DealIn(DealFields):
     probability: int | None = Field(None, ge=0, le=100)
     close_date: date | None = None
 
 
-class DealOut(Record, DealIn):
+class DealOut(Record, DealFields):
     probability: int
     close_date: date
     position: int

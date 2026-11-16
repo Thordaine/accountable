@@ -40,7 +40,12 @@ def test_open_figures(client):
     assert (open_["value"], open_["expected"], open_["count"]) == (30000, 16000, 2)
     by_stage = {s["stage"]: s for s in open_["stages"]}
     assert list(by_stage) == ["New", "Qualified", "Proposal", "Negotiation"]
-    assert by_stage["Negotiation"] == {"stage": "Negotiation", "count": 1, "value": 20000, "expected": 15000}
+    assert by_stage["Negotiation"] == {
+        "stage": "Negotiation",
+        "count": 1,
+        "value": 20000,
+        "expected": 15000,
+    }
     assert by_stage["Qualified"]["count"] == 0
 
 
@@ -53,9 +58,22 @@ def test_late(client):
 
 def test_funnel(client):
     for stage, value in (("New", 100), ("Proposal", 200), ("Won", 300), ("Lost", 400)):
-        add(client, "deals", name=stage, stage=stage, value=value, close_date="2026-11-01")
+        add(
+            client,
+            "deals",
+            name=stage,
+            stage=stage,
+            value=value,
+            close_date="2026-11-01",
+        )
     funnel = {f["stage"]: f["value"] for f in dashboard(client)["funnel"]}
-    assert funnel == {"New": 600, "Qualified": 500, "Proposal": 500, "Negotiation": 300, "Won": 300}
+    assert funnel == {
+        "New": 600,
+        "Qualified": 500,
+        "Proposal": 500,
+        "Negotiation": 300,
+        "Won": 300,
+    }
 
 
 def test_follow_ups_window(client):
@@ -63,9 +81,21 @@ def test_follow_ups_window(client):
     deal = add(client, "deals", name="Renewal")
 
     def task(name, due, **extra):
-        record = {"deal_id": deal["id"]} if extra.pop("on_deal", False) else {"contact_id": ann["id"]}
-        return add(client, "activities", type="call", description=name, happened_at="2026-11-01T09:00",
-                   follow_up_date=due, **record, **extra)
+        record = (
+            {"deal_id": deal["id"]}
+            if extra.pop("on_deal", False)
+            else {"contact_id": ann["id"]}
+        )
+        return add(
+            client,
+            "activities",
+            type="call",
+            description=name,
+            happened_at="2026-11-01T09:00",
+            follow_up_date=due,
+            **record,
+            **extra,
+        )
 
     task("in 7 days", "2026-11-22")
     task("today", "2026-11-15", on_deal=True)
@@ -75,19 +105,37 @@ def test_follow_ups_window(client):
     client.patch(f"/api/activities/{done['id']}", json={"done": True})
     follow_ups = dashboard(client)["follow_ups"]
     assert [(f["description"], f["overdue"]) for f in follow_ups] == [
-        ("yesterday", True), ("today", False), ("in 7 days", False)
+        ("yesterday", True),
+        ("today", False),
+        ("in 7 days", False),
     ]
-    assert follow_ups[0]["record"] == {"kind": "contact", "id": ann["id"], "name": "Ann"}
-    assert follow_ups[1]["record"] == {"kind": "deal", "id": deal["id"], "name": "Renewal"}
+    assert follow_ups[0]["record"] == {
+        "kind": "contact",
+        "id": ann["id"],
+        "name": "Ann",
+    }
+    assert follow_ups[1]["record"] == {
+        "kind": "deal",
+        "id": deal["id"],
+        "name": "Renewal",
+    }
 
 
 def test_recent_limit(client):
     ann = add(client, "contacts", name="Ann")
     for day in range(1, 12):
-        add(client, "activities", type="note", contact_id=ann["id"], description=f"Day {day}",
-            happened_at=f"2026-11-{day:02d}T09:00")
+        add(
+            client,
+            "activities",
+            type="note",
+            contact_id=ann["id"],
+            description=f"Day {day}",
+            happened_at=f"2026-11-{day:02d}T09:00",
+        )
     deal = add(client, "deals", name="Renewal")
-    client.post(f"/api/deals/{deal['id']}/move", json={"stage": "Qualified", "index": 0})
+    client.post(
+        f"/api/deals/{deal['id']}/move", json={"stage": "Qualified", "index": 0}
+    )
     recent = dashboard(client)["recent"]
     assert len(recent) == 10
     assert recent[0]["description"] == "Moved from New to Qualified"
@@ -99,14 +147,42 @@ def test_thousand_records(client):
     now = datetime(2026, 11, 1, 9, 0)
     with client.app.state.engine.begin() as conn:
         conn.execute(insert(organizations), [{"name": f"Org {i}"} for i in range(1000)])
-        conn.execute(insert(contacts), [{"name": f"Person {i}", "status": "Lead", "organization_id": i + 1}
-                                        for i in range(1000)])
-        conn.execute(insert(deals), [{"name": f"Deal {i}", "stage": ["New", "Won", "Lost"][i % 3], "value": 1000,
-                                      "probability": 10, "close_date": date(2026, 10, 1), "position": i,
-                                      "organization_id": i + 1, "contact_id": i + 1} for i in range(1000)])
-        conn.execute(insert(activities), [{"type": "note", "description": "x", "happened_at": now,
-                                           "contact_id": i + 1, "follow_up_date": date(2026, 11, 16)}
-                                          for i in range(1000)])
+        conn.execute(
+            insert(contacts),
+            [
+                {"name": f"Person {i}", "status": "Lead", "organization_id": i + 1}
+                for i in range(1000)
+            ],
+        )
+        conn.execute(
+            insert(deals),
+            [
+                {
+                    "name": f"Deal {i}",
+                    "stage": ["New", "Won", "Lost"][i % 3],
+                    "value": 1000,
+                    "probability": 10,
+                    "close_date": date(2026, 10, 1),
+                    "position": i,
+                    "organization_id": i + 1,
+                    "contact_id": i + 1,
+                }
+                for i in range(1000)
+            ],
+        )
+        conn.execute(
+            insert(activities),
+            [
+                {
+                    "type": "note",
+                    "description": "x",
+                    "happened_at": now,
+                    "contact_id": i + 1,
+                    "follow_up_date": date(2026, 11, 16),
+                }
+                for i in range(1000)
+            ],
+        )
     for path in ("organizations", "contacts", "deals", "dashboard"):
         start = time.perf_counter()
         assert client.get(f"/api/{path}").status_code == 200

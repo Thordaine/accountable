@@ -100,7 +100,13 @@ export interface Dashboard {
   won: number[];
   lost: number[];
   win_rate: number | null;
-  open: { value: number; expected: number; count: number; late: number; stages: StageFigures[] };
+  open: {
+    value: number;
+    expected: number;
+    count: number;
+    late: number;
+    stages: StageFigures[];
+  };
   funnel: { stage: Stage; value: number }[];
   follow_ups: {
     activity_id: number;

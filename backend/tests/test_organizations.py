@@ -32,8 +32,13 @@ def test_delete_org_keeps_links(client):
     ann = add(client, "contacts", name="Ann", organization_id=org["id"])
     bo = add(client, "contacts", name="Bo", organization_id=org["id"])
     deal = add(client, "deals", name="Renewal", organization_id=org["id"])
-    assert client.get(f"/api/organizations/{org['id']}/impact").json() == {"contacts": 2, "deals": 1}
+    assert client.get(f"/api/organizations/{org['id']}/impact").json() == {
+        "contacts": 2,
+        "deals": 1,
+    }
     assert client.delete(f"/api/organizations/{org['id']}").status_code == 204
     for kind, record in (("contacts", ann), ("contacts", bo), ("deals", deal)):
-        assert client.get(f"/api/{kind}/{record['id']}").json()["organization_id"] is None
+        assert (
+            client.get(f"/api/{kind}/{record['id']}").json()["organization_id"] is None
+        )
     assert client.get(f"/api/organizations/{org['id']}").status_code == 404

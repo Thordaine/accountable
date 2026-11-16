@@ -14,28 +14,42 @@ export function useValues<T extends Record<string, unknown>>(initial: T) {
 }
 
 /** Checks required fields, saves, shows server errors by field, toasts and closes. */
-export function useFormSave<T>(kind: Kind, noun: string, id: number | undefined, onDone: (saved: T) => void) {
+export function useFormSave<T>(
+  kind: Kind,
+  noun: string,
+  id: number | undefined,
+  onDone: (saved: T) => void,
+) {
   const save = useSave<T>(kind);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  function submit(values: Record<string, unknown>, required: string[], body: unknown) {
+  function submit(
+    values: Record<string, unknown>,
+    required: string[],
+    body: unknown,
+  ) {
     const empty = missing(values, required);
     setErrors(empty);
     if (Object.keys(empty).length) return;
-    save.mutate({ id, body }, {
-      onSuccess: (saved) => {
-        toast(`${noun} saved`);
-        onDone(saved);
+    save.mutate(
+      { id, body },
+      {
+        onSuccess: (saved) => {
+          toast(`${noun} saved`);
+          onDone(saved);
+        },
+        onError: (error) => {
+          if (error instanceof ApiError && Object.keys(error.fields).length)
+            setErrors(error.fields);
+          else toast(`Couldn't save the ${noun.toLowerCase()}`);
+        },
       },
-      onError: (error) => {
-        if (error instanceof ApiError && Object.keys(error.fields).length) setErrors(error.fields);
-        else toast(`Couldn't save the ${noun.toLowerCase()}`);
-      },
-    });
+    );
   }
 
   return { submit, errors, saving: save.isPending };
 }
 
 /** Empty text becomes null. */
-export const orNull = (text: string) => (text.trim() === "" ? null : text.trim());
+export const orNull = (text: string) =>
+  text.trim() === "" ? null : text.trim();
