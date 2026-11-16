@@ -34,3 +34,10 @@ Run `npm run check` before saying a piece of work is done. It runs every check b
 A failing check doesn't stop the others, so one run shows every failure. `npm run check:quick` runs the same checks without the end-to-end tests.
 
 Fix what a check finds; never weaken or switch off a rule to get past it. If a rule doesn't suit this project, ask first.
+
+## Hooks
+
+- Git pre-commit (lefthook, `lefthook.yml`, installed by `npm install`): formats the staged files and stages the result, then runs ESLint and ruff check on the staged files, tsc and ty, and gitleaks on the staged changes. It skips the tests, so it stays quick
+- Claude Code (`.claude/settings.json`, scripts in `.claude/hooks/`):
+  - when Claude finishes a turn, `npm run check:quick` runs; a failure is sent back to Claude to fix, once per turn (the full output is in `logs/check-quick.log`)
+  - Claude may not edit `.env`, through its file tools or through a shell command that names it
