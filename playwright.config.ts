@@ -14,7 +14,7 @@ export default defineConfig({
       reuseExistingServer: false,
     },
     {
-      command: "npm -w frontend run dev",
+      command: "npm -w frontend run dev -- --host 127.0.0.1",
       url: "http://127.0.0.1:5174",
       env: { PORT: "5174", ACCOUNTABLE_API: "http://127.0.0.1:8100" },
       reuseExistingServer: false,
