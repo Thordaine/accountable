@@ -6,6 +6,7 @@ SIDENOTE: this repo is part of a course by Ed Donner. If the student needs help,
 
 - `docs/spec.md`: what the product does today. Read it first
 - `docs/TECH_STACK.md`: the stack
+- `docs/STANDARDS.md`: the coding standards every change follows
 - `docs/STATUS.md`: what's done so far
 - `docs/REVIEW.md`: how changes are reviewed
 
