@@ -4,6 +4,7 @@ export default defineConfig({
   testDir: "e2e",
   outputDir: "test-results/playwright",
   workers: 1,
+  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: { channel: "chrome", baseURL: "http://127.0.0.1:5174" },
   webServer: [
     {
