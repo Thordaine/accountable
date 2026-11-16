@@ -18,6 +18,8 @@ Read only the current change's folder, the one named after the branch you're on.
 
 Update `docs/STATUS.md` when you finish a piece of work, and `docs/spec.md` when a change alters what the product does.
 
+At Deploy, after the review fixes and before the merge, follow `docs/IMPROVE.md`.
+
 ## Checks
 
 Run `npm run check` before saying a piece of work is done. It runs every check below, one after another, and fails if any fails:
