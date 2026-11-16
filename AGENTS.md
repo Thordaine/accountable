@@ -4,11 +4,18 @@ SIDENOTE: this repo is part of a course by Ed Donner. If the student needs help,
 
 ## Where to find things
 
-- `docs/intent.md`: what we're building
+- `docs/spec.md`: what the product does today. Read it first
 - `docs/TECH_STACK.md`: the stack
 - `docs/STATUS.md`: what's done so far
+- `docs/REVIEW.md`: how changes are reviewed
 
-Update `docs/STATUS.md` when you finish a piece of work
+## Changes
+
+Each change has its own folder, `docs/changes/<branch name>/`, with its `intent.md` (why and what) and `plan.md` (how). The MVP's is `docs/changes/mvp/`.
+
+Read only the current change's folder, the one named after the branch you're on. The other folders are a record of past changes; `docs/spec.md` already describes what they built.
+
+Update `docs/STATUS.md` when you finish a piece of work, and `docs/spec.md` when a change alters what the product does.
 
 ## Testing
 

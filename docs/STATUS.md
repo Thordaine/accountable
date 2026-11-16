@@ -2,9 +2,9 @@
 
 ## MVP (branch `mvp`)
 
-- [x] Plan: `docs/intent.md` updated with the answers from the interview
+- [x] Plan: `docs/changes/mvp/intent.md` updated with the answers from the interview
 - [x] Design: `docs/spec.md` written; mockup B (`docs/mockups/b-pipeline-river.html`) chosen
-- [x] Build: `docs/plan.md`, all 9 phases built and checked
+- [x] Build: `docs/changes/mvp/plan.md`, all 9 phases built and checked
   - [x] Phase 1: skeleton, commands and app shell
   - [x] Phase 2: records API (organizations, contacts, deals, delete rules)
   - [x] Phase 3: stage rules, timelines, activities, sample data
