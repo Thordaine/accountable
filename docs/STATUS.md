@@ -35,7 +35,7 @@
   - [x] Phase 4: dark values, also AA
   - [x] Phase 5: the sun/moon toggle beside Add deal
   - [x] Phase 6: end-to-end tests (`e2e/theme.spec.ts`)
-- [x] Test: screenshots of the dashboard and pipeline in both modes
+- [x] Test: screenshots of the dashboard and pipeline in both modes; seeded times rounded to the minute, so the dashboard end-to-end test no longer fails in the minute after seeding
 - [ ] Deploy
 
 ## Run it
@@ -43,7 +43,7 @@
 Needs Node 24 or later, [uv](https://docs.astral.sh/uv/), Google Chrome and, for `npm run check`, [gitleaks](https://github.com/gitleaks/gitleaks) 8.25 or later.
 
 - `npm install` once, then `npm run dev` and open http://localhost:5173
-- `npm test` runs the backend, frontend and end-to-end tests (46 + 152 + 29)
+- `npm test` runs the backend, frontend and end-to-end tests
 - `npm run check` runs every check and the tests; `npm run format` fixes the formatting
 - `npm run seed` resets the data to the sample data
 

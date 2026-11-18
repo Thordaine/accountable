@@ -18,6 +18,8 @@ Read only the current change's folder, the one named after the branch you're on.
 
 Update `docs/STATUS.md` when you finish a piece of work, and `docs/spec.md` when a change alters what the product does.
 
+When the build departs from `plan.md`, for example with a fix outside it, a different file layout or a value it didn't agree, record the departure in `plan.md` and, if it changes what the product does, in `docs/spec.md`, before saying the work is done. Saying it in chat isn't enough, because the reviewer only reads the docs and the code.
+
 At Deploy, after the review fixes and before the merge, follow `docs/IMPROVE.md`.
 
 ## Checks

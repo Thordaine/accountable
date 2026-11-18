@@ -20,7 +20,7 @@
   /* Cerulean and Raspberry as fills under white text, and as text. */
   --ceru-fill: #0e7a9e;
   --rasp-fill: #d43d63;
-  --ceru-ink: var(--ceru-fill);
+  --ceru-ink: #0e789c;
   --rasp-ink: #c43459;
 
   /* Text on Midnight (or Sea Mist), Cerulean, Raspberry and Sea Green. */
@@ -65,7 +65,7 @@
   --card-late: #fdebef;
   --card-late-ring: rgba(239, 71, 111, 0.55);
   --backdrop: rgba(7, 59, 76, 0.35);
-  --toast-border: hsl(0, 0%, 93%);
+  --toast-border: #ededed;
   --call-tint: #e1f1f7;
   --email-tint: #fff3d9;
 

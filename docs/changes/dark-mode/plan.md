@@ -24,7 +24,9 @@ Light mode fails WCAG 2.2 AA today in a few places, which the new spec rule forb
 
 Agreed in review: the AA rule wins over "looks exactly as today" for these pairs only, with the smallest change that passes: muted `#4E6E79` (4.95 on the page), a darker Cerulean fill for white text `#0E7A9E` (4.89), a darker Raspberry fill for white text `#D43D63` (4.52), sea ink `#047A5B` (5.33), Marigold ink `#8F6300` (4.83 on the email tint), and a Muted checkbox border (5.48). The brand colors themselves stay as they are for lines, dots and large fills. Everything else in light mode stays exactly as it is.
 
-These are left out of the 3:1 rule, since text beside them carries the same meaning: the stage-colored segments of the pipeline band, timeline pips, the dashed "add" slot and table row lines.
+Added during the build, because the table above missed that Cerulean and Raspberry are also small text (links, "Show N more", Delete, late dates, required marks and form errors): Cerulean text `#0E789C` (4.53 on the page, 5.02 on white) and Raspberry text `#C43459` (4.60 on the late card). Each is its own token, `--ceru-ink` and `--rasp-ink`, beside the fills.
+
+These are left out of the 3:1 rule, since text beside them carries the same meaning: the stage-colored segments of the pipeline band, timeline pips, the dashed "add" slot and table row lines. Text-field borders are left out too (Mist, 1.45 on white and 2.84 on black): every field has a label above it, and the focus ring, which meets 3:1, shows the field being typed in. Darkening them would change light mode beyond the agreed pairs.
 
 ## Files that change
 
@@ -111,3 +113,14 @@ The screenshots for the intent's third success criterion are taken in the Test s
 - In dark mode, the Add deal dialog and a toast use the dark panel color.
 - A new browser context starts light while the first one is dark.
 - Toggling back to light and reloading stays light.
+
+## Changes during build
+
+Where the build departed from this plan:
+
+- **Cerulean and Raspberry text colors**, added to the AA decision above.
+- **Two more tokens:** `--on-sea` and `--midnight`, so button text and text on the light stage colors stay Midnight in dark mode. In light mode both equal today's ink.
+- **`frontend/vite.config.ts`** also changes: `css: { include: [/tokens\.css/] }`, because Vitest otherwise hands tests an empty string for CSS files, even with `?raw`.
+- **The "app script blocked" test** checks `data-theme="dark"` on `<html>` rather than the background, because in dev the CSS loads through `main.tsx`, so with that script blocked no background is drawn. It fails when the inline script is removed.
+- **The chart tooltip** uses the raised surface rather than the panel, so it stands out on black panels. In light mode both are white.
+- **The seed fix** (`backend/accountable/seed.py`, with a test in `backend/tests/test_seed.py`): seeded times are rounded down to the whole minute. Seeding moved any sample entry later than now back to the exact seed time, seconds included, while a stage change is stamped to the minute. So in the minute after seeding, a sample entry could sort above a new one, and the dashboard's "recent activity" end-to-end test failed. It isn't dark mode, but `npm run check` had to pass.
