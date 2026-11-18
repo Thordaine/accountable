@@ -20,9 +20,11 @@ Accountable is a business management system: a sales CRM that will grow into a f
 ## App shell
 
 - One page app with five sections: Dashboard, Organizations, Contacts, Deals and Pipeline. The dashboard is the landing page.
-- A top navigation bar, always visible: the Accountable mark and name, the five sections with the open one highlighted, and an **Add deal** button that opens the deal form from anywhere.
+- A top navigation bar, always visible: the Accountable mark and name, the five sections with the open one highlighted, an **Add deal** button that opens the deal form from anywhere and, at the far right beside it, the dark mode toggle.
 - Each section has its own address, and so does each record's page (for example `/deals/12`), so the browser's back button, refresh and bookmarks work.
-- Light mode only, designed for laptop and desktop screens from 1280 pixels wide. The content is at most 1360 pixels wide.
+- Designed for laptop and desktop screens from 1280 pixels wide. The content is at most 1360 pixels wide.
+- Light mode and dark mode. Light mode is the default. The toggle is a sun/moon icon button labelled "Dark mode", shown as pressed while dark mode is on. The whole app switches at once, including charts, dialogs, forms, menus and confirmations, with no reload.
+- The browser remembers the chosen mode, so it is kept after a refresh and a restart, and the page opens in it without first flashing the other mode. Another browser starts in light mode, and `npm run seed` doesn't change it.
 - It works fully offline: fonts and libraries are bundled with the app, never loaded from the internet.
 - Any change made anywhere shows on every screen as soon as the server confirms it.
 - Short confirmations ("Deal saved", "Activity logged", "Moved to Won", "Contact deleted") appear at the bottom right.
@@ -225,12 +227,17 @@ The layout follows mockup B, top to bottom:
 The brand skill (`.claude/skills/brand/SKILL.md`) sets fonts, colors, surfaces and tone, and takes priority over general design guidance.
 
 - Instrument Sans for headings and body, JetBrains Mono for figures, money and dates in tables.
-- Page background `#F0F4F5`, white rounded panels with no outline.
-- Stages use the brand colors in order: New Sea Green, Qualified Marigold, Proposal Coral, Negotiation Cerulean. Won is Midnight and Lost is Raspberry.
+- Light mode: page background `#F0F4F5`, white rounded panels with no outline, Midnight ink.
+- Dark mode: page background `#04232E`, black rounded panels with no outline, Sea Mist ink. Sea Green and Marigold text is lightened rather than darkened.
+- Stages use the brand colors in order: New Sea Green, Qualified Marigold, Proposal Coral, Negotiation Cerulean. Won is Midnight (Sea Mist in dark mode) and Lost is Raspberry.
 - Contact status: Lead Marigold, Qualified Cerulean, Customer Sea Green.
+- The active tab is Midnight in light mode and Sea Mist in dark mode.
+- Every color is a named token defined in one place, with a light and a dark value. Screens and charts use only the tokens.
+- Both modes meet WCAG 2.2 AA contrast: at least 4.5:1 for normal text, and 3:1 for large text and for the parts that carry meaning, such as badges, chart lines and bars, checkboxes and focus rings.
 - Money always shows its currency, such as "US$48,200", or "US$48k" and "US$1.2M" where space is short.
 - Short, plain labels in sentence case, with no exclamation marks.
-- The visual reference is mockup B, `docs/mockups/b-pipeline-river.html` (screenshot `b-pipeline-river.png`). Other screens follow its frame, panels, type and color: the top navigation bar, white rounded panels on the page background, JetBrains Mono for figures and Midnight for the active tab. Mockups A and C were not chosen and are kept for the record only.
+- The visual reference is mockup B, `docs/mockups/b-pipeline-river.html` (screenshot `b-pipeline-river.png`). Other screens follow its frame, panels, type and color: the top navigation bar, rounded panels on the page background, JetBrains Mono for figures and Midnight for the active tab. Mockups A and C were not chosen and are kept for the record only.
+- The reference for dark mode is the screenshots of the dashboard and the pipeline in both modes, in `docs/changes/dark-mode/`.
 
 ## Data and sample data
 
@@ -243,4 +250,4 @@ The data lives in one SQLite file, `data/accountable.db`, or the file named by `
 
 ## Not built
 
-Sign-in, user accounts and several users; dark mode and phone layouts; AI features; email, calendar or phone integrations; currencies other than US dollars; reports beyond the dashboard; tags and custom fields; changing the pipeline stages; importing and exporting data; making Accountable available beyond the computer it runs on.
+Sign-in, user accounts and several users; following the device's own dark mode setting; phone layouts; AI features; email, calendar or phone integrations; currencies other than US dollars; reports beyond the dashboard; tags and custom fields; changing the pipeline stages; importing and exporting data; making Accountable available beyond the computer it runs on.
