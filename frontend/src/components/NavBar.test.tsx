@@ -33,3 +33,12 @@ test("marks the current section", () => {
     "aria-current",
   );
 });
+
+test("the dark mode toggle comes after Add deal", () => {
+  renderAt("/");
+  const add = screen.getByRole("button", { name: "Add deal" });
+  const toggle = screen.getByRole("button", { name: "Dark mode" });
+  expect(add.compareDocumentPosition(toggle)).toBe(
+    Node.DOCUMENT_POSITION_FOLLOWING,
+  );
+});

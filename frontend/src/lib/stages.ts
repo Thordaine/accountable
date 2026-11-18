@@ -32,13 +32,37 @@ export const STAGE_COLOR: Record<Stage, string> = {
   Lost: "var(--stage-lost)",
 };
 
-/** Stages whose color needs white text. */
-export const DARK_STAGES: readonly Stage[] = ["Negotiation", "Won", "Lost"];
+/** The text color on each stage color. */
+export const STAGE_TEXT: Record<Stage, string> = {
+  New: "var(--on-stage-new)",
+  Qualified: "var(--on-stage-qualified)",
+  Proposal: "var(--on-stage-proposal)",
+  Negotiation: "var(--on-stage-negotiation)",
+  Won: "var(--on-stage-won)",
+  Lost: "var(--on-stage-lost)",
+};
+
+/** The shade over each stage color that marks expected revenue in the pipeline band. */
+export const STAGE_EXPECTED: Record<Stage, string> = {
+  New: "var(--band-expected)",
+  Qualified: "var(--band-expected)",
+  Proposal: "var(--band-expected)",
+  Negotiation: "var(--band-expected-deep)",
+  Won: "var(--band-expected-deep)",
+  Lost: "var(--band-expected-deep)",
+};
 
 export const STATUS_COLOR: Record<Status, string> = {
   Lead: "var(--status-lead)",
   Qualified: "var(--status-qualified)",
   Customer: "var(--status-customer)",
+};
+
+/** The text color on each status color. */
+export const STATUS_TEXT: Record<Status, string> = {
+  Lead: "var(--on-status-lead)",
+  Qualified: "var(--on-status-qualified)",
+  Customer: "var(--on-status-customer)",
 };
 
 export function isOpen(stage: Stage) {

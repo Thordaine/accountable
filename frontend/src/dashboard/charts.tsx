@@ -12,12 +12,13 @@ import {
 } from "recharts";
 import { formatMoney, formatMoneyShort } from "../lib/format";
 
-const INK = "#073B4C";
-const MUTED = "#5B7C87";
-const LINE = "#E4EBED";
-const SEA = "#06D6A0";
-const SEA_INK = "#05936E";
-const RASP = "#EF476F";
+const INK = "var(--ink)";
+const MUTED = "var(--muted)";
+const LINE = "var(--line)";
+const SEA = "var(--sea)";
+const SEA_INK = "var(--sea-ink)";
+const RASP = "var(--rasp)";
+const WON = "var(--stage-won)";
 const tick = {
   fontFamily: "JetBrains Mono Variable, monospace",
   fontSize: 11,
@@ -26,7 +27,9 @@ const tick = {
 const tooltipStyle = {
   borderRadius: 10,
   border: 0,
-  boxShadow: "0 8px 24px rgba(7,59,76,.15)",
+  background: "var(--raised)",
+  color: INK,
+  boxShadow: "var(--shadow-tooltip)",
   fontFamily: "Instrument Sans Variable",
 };
 
@@ -148,11 +151,11 @@ export function WinLossChart({
         width={24}
         allowDecimals={false}
       />
-      <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#F0F4F5" }} />
+      <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "var(--page)" }} />
       <Bar
         dataKey="won"
         name="Won"
-        fill={INK}
+        fill={WON}
         barSize={11}
         radius={[3, 3, 0, 0]}
         isAnimationActive={false}

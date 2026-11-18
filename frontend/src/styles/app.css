@@ -8,7 +8,7 @@ body {
   font: 15px/1.5 var(--sans);
 }
 a {
-  color: var(--ceru);
+  color: var(--ceru-ink);
   text-decoration: none;
 }
 a:hover {
@@ -53,8 +53,8 @@ textarea:focus-visible {
   width: 26px;
   height: 26px;
   border-radius: 7px;
-  background: var(--ink);
-  color: var(--sea);
+  background: var(--mark);
+  color: var(--on-mark);
   display: grid;
   place-items: center;
   font-size: 14px;
@@ -77,7 +77,7 @@ textarea:focus-visible {
 }
 .tabs a[aria-current="page"] {
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
 }
 
 /* Buttons */
@@ -87,7 +87,7 @@ textarea:focus-visible {
   border-radius: 10px;
   padding: 10px 16px;
   background: var(--sea);
-  color: var(--ink);
+  color: var(--on-sea);
   cursor: pointer;
   white-space: nowrap;
 }
@@ -96,26 +96,46 @@ textarea:focus-visible {
 }
 .btn.quiet {
   background: var(--page);
+  color: var(--ink);
 }
 .btn.danger {
-  background: var(--rasp);
-  color: #fff;
+  background: var(--rasp-fill);
+  color: var(--on-rasp);
 }
 .btn.small {
   padding: 6px 10px;
   font-size: 13px;
   border-radius: 8px;
 }
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--page);
+  color: var(--ink);
+  cursor: pointer;
+}
+.theme-toggle svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .link-btn {
   font: inherit;
   border: 0;
   background: none;
   padding: 0;
-  color: var(--ceru);
+  color: var(--ceru-ink);
   cursor: pointer;
 }
 .link-btn.danger {
-  color: var(--rasp);
+  color: var(--rasp-ink);
 }
 
 /* Page title and panels */
@@ -160,7 +180,7 @@ h2 {
   font-family: var(--mono);
 }
 .late {
-  color: var(--rasp);
+  color: var(--rasp-ink);
 }
 .muted {
   color: var(--muted);
@@ -238,7 +258,7 @@ table.data td {
   vertical-align: middle;
 }
 table.data tbody tr:hover {
-  background: #f7fafa;
+  background: var(--row-hover);
 }
 table.data td.num {
   text-align: right;
@@ -296,7 +316,7 @@ table.data td .mono {
 }
 .segmented button[aria-pressed="true"] {
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
 }
 
 /* Dialogs and forms */
@@ -307,7 +327,7 @@ table.data td .mono {
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(7, 59, 76, 0.35);
+  background: var(--backdrop);
 }
 .dialog-frame {
   position: fixed;
@@ -353,7 +373,7 @@ table.data td .mono {
   color: var(--muted);
 }
 .required {
-  color: var(--rasp);
+  color: var(--rasp-ink);
 }
 .field input,
 .field select,
@@ -363,21 +383,21 @@ table.data td .mono {
   border: 1px solid var(--mist);
   border-radius: 10px;
   padding: 9px 12px;
-  background: #fff;
+  background: var(--input);
   width: 100%;
 }
 .field textarea {
   resize: vertical;
 }
 .field-error {
-  color: var(--rasp);
+  color: var(--rasp-ink);
   font-size: 13px;
   font-weight: 500;
 }
 .picker-options {
-  background: #fff;
+  background: var(--raised);
   border-radius: 12px;
-  box-shadow: 0 12px 32px rgba(7, 59, 76, 0.18);
+  box-shadow: var(--shadow-menu);
   padding: 6px;
   width: var(--input-width);
   max-height: 260px;
@@ -402,6 +422,9 @@ table.data td .mono {
   font-family: var(--sans) !important;
   color: var(--ink) !important;
   border-radius: 12px !important;
+  --normal-bg: var(--panel);
+  --normal-border: var(--toast-border);
+  --normal-text: var(--ink);
 }
 
 /* Record pages */
@@ -410,7 +433,7 @@ table.data td .mono {
   margin-left: -6px;
 }
 .btn.danger-text {
-  color: var(--rasp);
+  color: var(--rasp-ink);
 }
 .record-grid {
   display: grid;
@@ -490,12 +513,12 @@ table.data.short td:first-child {
   margin: 4px 0 18px;
 }
 .log-form .segmented {
-  background: #fff;
+  background: var(--input);
   margin-bottom: 12px;
 }
 .log-form .field textarea,
 .log-form .field input {
-  background: #fff;
+  background: var(--input);
 }
 .log-actions {
   display: flex;
@@ -553,16 +576,16 @@ table.data.short td:first-child {
   color: var(--ink);
 }
 .type-icon.call {
-  background: #e1f1f7;
+  background: var(--call-tint);
   color: var(--ceru);
 }
 .type-icon.email {
-  background: #fff3d9;
+  background: var(--email-tint);
   color: var(--mari-ink);
 }
 .type-icon.auto {
-  background: var(--ink);
-  color: var(--sea);
+  background: var(--mark);
+  color: var(--on-mark);
 }
 .follow-up {
   display: inline-flex;
@@ -673,21 +696,21 @@ table.data.short td:first-child {
   opacity: 0.35;
 }
 .card {
-  background: #f6f9f9;
+  background: var(--card);
   border-radius: 12px;
   padding: 10px 12px;
   position: relative;
 }
 .card:hover {
-  background: #edf3f4;
+  background: var(--card-hover);
 }
 .card.is-late {
-  background: #fdebef;
-  box-shadow: inset 0 0 0 1.5px rgba(239, 71, 111, 0.55);
+  background: var(--card-late);
+  box-shadow: inset 0 0 0 1.5px var(--card-late-ring);
 }
 .card.lifted {
-  background: #fff;
-  box-shadow: 0 14px 30px rgba(7, 59, 76, 0.22);
+  background: var(--raised);
+  box-shadow: var(--shadow-lifted);
   cursor: grabbing;
 }
 .card-name {
@@ -712,7 +735,7 @@ table.data.short td:first-child {
   color: var(--muted);
 }
 .card-date.late {
-  color: var(--rasp);
+  color: var(--rasp-ink);
 }
 .card-late {
   margin-top: 6px;
@@ -788,7 +811,7 @@ table.data.short td:first-child {
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(7, 59, 76, 0.16);
+  background: var(--band-expected);
 }
 .seg .name {
   font-weight: 600;
@@ -803,12 +826,6 @@ table.data.short td:first-child {
   font-size: 20px;
   font-weight: 500;
   letter-spacing: -0.02em;
-}
-.seg.dark {
-  color: #fff;
-}
-.seg.dark .exp {
-  background: rgba(4, 35, 46, 0.35);
 }
 .key {
   display: flex;
@@ -922,17 +939,17 @@ table.data.short td:first-child {
   white-space: nowrap;
 }
 .list .when.late {
-  color: var(--rasp);
+  color: var(--rasp-ink);
 }
 .check {
   appearance: none;
   width: 18px;
   height: 18px;
   border-radius: 5px;
-  border: 2px solid var(--mist);
+  border: 2px solid var(--check-border);
   margin: 1px 0 0;
   cursor: pointer;
-  background: #fff;
+  background: var(--input);
 }
 .check:checked {
   background: var(--sea-ink);
@@ -946,7 +963,7 @@ table.data.short td:first-child {
 }
 .column-more {
   font: 600 13px var(--sans);
-  color: var(--ceru);
+  color: var(--ceru-ink);
   background: none;
   border: 0;
   padding: 8px;

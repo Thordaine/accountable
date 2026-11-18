@@ -53,7 +53,7 @@ export function Dashboard() {
               </div>
               <div className="legend">
                 <span>
-                  <i style={{ background: "var(--ink)" }} />
+                  <i style={{ background: "var(--stage-won)" }} />
                   Won
                 </span>
                 <span>

@@ -6,9 +6,9 @@ import {
 import type { Deal } from "../api/types";
 import { formatMoneyShort } from "../lib/format";
 import {
-  DARK_STAGES,
   expectedRevenue,
   STAGE_COLOR,
+  STAGE_TEXT,
   type Stage,
 } from "../lib/stages";
 import { DealCard } from "./DealCard";
@@ -42,7 +42,7 @@ export function Column({
         className="column-head"
         style={{
           background: STAGE_COLOR[stage],
-          color: DARK_STAGES.includes(stage) ? "#fff" : "var(--ink)",
+          color: STAGE_TEXT[stage],
         }}
       >
         <div className="column-title">

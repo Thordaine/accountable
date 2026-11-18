@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import type { Dashboard } from "../api/types";
 import { formatMoney, formatMoneyShort } from "../lib/format";
-import { DARK_STAGES, STAGE_COLOR } from "../lib/stages";
+import { STAGE_COLOR, STAGE_EXPECTED, STAGE_TEXT } from "../lib/stages";
 
 type Props = { open: Dashboard["open"]; winRate: number | null };
 
@@ -48,13 +48,18 @@ export function PipelineHero({ open, winRate }: Props) {
             <Link
               key={s.stage}
               to="/pipeline"
-              className={`seg${DARK_STAGES.includes(s.stage) ? " dark" : ""}`}
-              style={{ flexGrow: s.value, background: STAGE_COLOR[s.stage] }}
+              className="seg"
+              style={{
+                flexGrow: s.value,
+                background: STAGE_COLOR[s.stage],
+                color: STAGE_TEXT[s.stage],
+              }}
             >
               <span
                 className="exp"
                 style={{
                   height: `${s.value ? (s.expected / s.value) * 100 : 0}%`,
+                  background: STAGE_EXPECTED[s.stage],
                 }}
               />
               <span className="name">{s.stage}</span>
@@ -74,7 +79,7 @@ export function PipelineHero({ open, winRate }: Props) {
           Value of deals at each stage
         </span>
         <span>
-          <i style={{ background: "#9DB1B7" }} />
+          <i style={{ background: "var(--band-key-expected)" }} />
           Darker part: expected revenue
         </span>
       </div>

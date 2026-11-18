@@ -1,30 +1,126 @@
-/* Brand tokens, from mockup B. */
+/* Brand tokens, from mockup B. Every color the app uses is defined here. */
 :root {
+  color-scheme: light;
+
   --page: #f0f4f5;
   --panel: #ffffff;
   --ink: #073b4c;
-  --muted: #5b7c87;
+  --muted: #4e6e79;
   --line: #e4ebed;
   --mist: #cdd8db;
   --sea: #06d6a0;
-  --sea-ink: #05936e;
+  --sea-ink: #047a5b;
   --mari: #ffc145;
-  --mari-ink: #9a6b00;
+  --mari-ink: #8f6300;
   --coral: #f78c6b;
   --ceru: #118ab2;
   --rasp: #ef476f;
+  --midnight: #073b4c;
+
+  /* Cerulean and Raspberry as fills under white text, and as text. */
+  --ceru-fill: #0e7a9e;
+  --rasp-fill: #d43d63;
+  --ceru-ink: var(--ceru-fill);
+  --rasp-ink: #c43459;
+
+  /* Text on Midnight (or Sea Mist), Cerulean, Raspberry and Sea Green. */
+  --on-ink: #ffffff;
+  --on-ceru: #ffffff;
+  --on-rasp: #ffffff;
+  --on-sea: var(--ink);
+
+  /* The Accountable mark and automatic timeline entries. */
+  --mark: var(--ink);
+  --on-mark: var(--sea);
 
   --stage-new: var(--sea);
   --stage-qualified: var(--mari);
   --stage-proposal: var(--coral);
-  --stage-negotiation: var(--ceru);
+  --stage-negotiation: var(--ceru-fill);
   --stage-won: var(--ink);
-  --stage-lost: var(--rasp);
+  --stage-lost: var(--rasp-fill);
+
+  --on-stage-new: var(--ink);
+  --on-stage-qualified: var(--ink);
+  --on-stage-proposal: var(--ink);
+  --on-stage-negotiation: var(--on-ceru);
+  --on-stage-won: var(--on-ink);
+  --on-stage-lost: var(--on-rasp);
 
   --status-lead: var(--mari);
-  --status-qualified: var(--ceru);
+  --status-qualified: var(--ceru-fill);
   --status-customer: var(--sea);
+
+  --on-status-lead: var(--ink);
+  --on-status-qualified: var(--on-ceru);
+  --on-status-customer: var(--ink);
+
+  /* Surfaces. */
+  --input: #ffffff;
+  --check-border: var(--muted);
+  --raised: #ffffff;
+  --row-hover: #f7fafa;
+  --card: #f6f9f9;
+  --card-hover: #edf3f4;
+  --card-late: #fdebef;
+  --card-late-ring: rgba(239, 71, 111, 0.55);
+  --backdrop: rgba(7, 59, 76, 0.35);
+  --toast-border: hsl(0, 0%, 93%);
+  --call-tint: #e1f1f7;
+  --email-tint: #fff3d9;
+
+  /* Shadows. */
+  --shadow-menu: 0 12px 32px rgba(7, 59, 76, 0.18);
+  --shadow-lifted: 0 14px 30px rgba(7, 59, 76, 0.22);
+  --shadow-tooltip: 0 8px 24px rgba(7, 59, 76, 0.15);
+
+  /* The pipeline band: the expected part of each segment, and its key. */
+  --band-expected: rgba(7, 59, 76, 0.16);
+  --band-expected-deep: rgba(4, 35, 46, 0.35);
+  --band-key-expected: #9db1b7;
 
   --sans: "Instrument Sans Variable", system-ui, sans-serif;
   --mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+/* Dark mode, set by the toggle on <html>. Tokens not listed keep their light value. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --page: #04232e;
+  --panel: #000000;
+  --ink: #cdd8db;
+  --muted: #8ca3aa;
+  --line: #1b3a44;
+  --mist: #3d5a63;
+  --sea-ink: #3ee4b6;
+  --mari-ink: #ffd27a;
+  --ceru-ink: #5cc4e6;
+  --rasp-ink: #ff8aa5;
+
+  --on-ink: var(--midnight);
+  --on-sea: var(--midnight);
+  --mark: var(--midnight);
+  --on-stage-new: var(--midnight);
+  --on-stage-qualified: var(--midnight);
+  --on-stage-proposal: var(--midnight);
+  --on-status-lead: var(--midnight);
+  --on-status-customer: var(--midnight);
+
+  --input: var(--panel);
+  --raised: #0b2f3b;
+  --row-hover: #08222b;
+  --card: #0b2630;
+  --card-hover: #10313c;
+  --card-late: #3a1422;
+  --backdrop: rgba(0, 0, 0, 0.6);
+  --toast-border: var(--line);
+  --call-tint: #0b3445;
+  --email-tint: #33280c;
+
+  --shadow-menu: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-lifted: 0 14px 30px rgba(0, 0, 0, 0.55);
+  --shadow-tooltip: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  --band-key-expected: #2a454e;
 }
