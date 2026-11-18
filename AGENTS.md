@@ -37,6 +37,8 @@ Run `npm run check` before saying a piece of work is done. It runs every check b
 
 A failing check doesn't stop the others, so one run shows every failure. `npm run check:quick` runs the same checks without the end-to-end tests.
 
+CI (`.github/workflows/ci.yml`) runs gitleaks, then `npm run check:quick`, on every push. It leaves out the end-to-end tests, so run `npm run check` before each merge.
+
 Fix what a check finds; never weaken or switch off a rule to get past it. If a rule doesn't suit this project, ask first.
 
 ## Hooks

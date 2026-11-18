@@ -22,7 +22,7 @@
 - [x] Coding standards: `docs/STANDARDS.md`
 - [x] Checks: `npm run check` and `npm run check:quick` (formatting, linting, complexity, types, secrets, tests with 80% unit coverage), `npm run format`
 - [x] Hooks: lefthook pre-commit (format, lint, types, secrets); Claude Code hooks that run `npm run check:quick` at the end of each turn and block edits to `.env`
-- [x] CI: `.github/workflows/ci.yml` runs gitleaks, then `npm run check`, on every push; a failed run uploads the Playwright report
+- [x] CI: `.github/workflows/ci.yml` runs gitleaks, then `npm run check:quick`, on every push; it leaves out the end-to-end tests, which run only in `npm run check` on this computer
 
 ## Dark mode (branch `dark-mode`)
 
