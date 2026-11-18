@@ -38,6 +38,12 @@
 - [x] Test: screenshots of the dashboard and pipeline in both modes; seeded times rounded to the minute, so the dashboard end-to-end test no longer fails in the minute after seeding
 - [ ] Deploy
 
+## Subagents (branch `subagents`)
+
+- [x] `reviewer` (`.claude/agents/reviewer.md`, Sonnet): reviews against `docs/REVIEW.md`; a hook lets its Bash run only commands that read
+- [x] `ui-check` (`.claude/agents/ui-check.md`, Sonnet): checks the running app with the Playwright MCP server against the brand skill and the spec; a hook keeps every file it saves, screenshots included, in `.playwright-mcp/`
+- [ ] Try each one (needs a Claude Code restart to load them)
+
 ## Run it
 
 Needs Node 24 or later, [uv](https://docs.astral.sh/uv/), Google Chrome and, for `npm run check`, [gitleaks](https://github.com/gitleaks/gitleaks) 8.25 or later.

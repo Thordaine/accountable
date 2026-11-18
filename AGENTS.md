@@ -45,3 +45,12 @@ Fix what a check finds; never weaken or switch off a rule to get past it. If a r
 - Claude Code (`.claude/settings.json`, scripts in `.claude/hooks/`):
   - when Claude finishes a turn, `npm run check:quick` runs; a failure is sent back to Claude to fix, once per turn (the full output is in `logs/check-quick.log`)
   - Claude may not edit `.env`, through its file tools or through a shell command that names it
+  - the reviewer subagent may run only shell commands that read (`.claude/hooks/reviewer-read-only.sh`)
+  - the ui-check subagent may save files only in `.playwright-mcp/`, and every screenshot must name its file (`.claude/hooks/ui-check-output-dir.sh`)
+
+## Subagents
+
+In `.claude/agents/`, both on Sonnet:
+
+- `reviewer`: reviews a branch or a commit against `docs/REVIEW.md` and reports findings by severity. It changes nothing
+- `ui-check`: checks the running app (`npm run dev`) with the Playwright MCP server against the brand skill and `docs/spec.md`, in light and dark mode. Its screenshots go in `.playwright-mcp/`, which git ignores. It changes no code or data
