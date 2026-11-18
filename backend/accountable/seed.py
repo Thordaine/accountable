@@ -376,7 +376,8 @@ def seed(conn: Connection, today: date, now: time | None = None) -> None:
     org_ids = insert_organizations(conn)
     contact_ids = insert_contacts(conn, org_ids, rng)
     inserted = insert_deals(conn, org_ids, contact_ids, today, rng)
-    latest = datetime.combine(today, now or datetime.now().time())
+    moment = now or datetime.now().time()
+    latest = datetime.combine(today, moment.replace(second=0, microsecond=0))
     for entries in (
         history(conn, inserted, today, rng),
         logged(inserted, contact_ids, today, rng),

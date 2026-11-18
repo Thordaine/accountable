@@ -35,7 +35,7 @@
   - [x] Phase 4: dark values, also AA
   - [x] Phase 5: the sun/moon toggle beside Add deal
   - [x] Phase 6: end-to-end tests (`e2e/theme.spec.ts`)
-- [ ] Test: screenshots of the dashboard and pipeline in both modes
+- [x] Test: screenshots of the dashboard and pipeline in both modes
 - [ ] Deploy
 
 ## Run it

@@ -115,3 +115,12 @@ def test_nothing_happens_after_seeding(conn):
         seed(conn, day, time(8, 0))
         latest = conn.execute(select(func.max(activities.c.happened_at))).scalar()
         assert latest <= moment, day
+
+
+def test_seeded_times_are_whole_minutes(conn):
+    """Seeded entries sort below a live entry logged in the same minute."""
+    from datetime import time
+
+    seed(conn, date(2026, 11, 18), time(8, 0, 44, 347367))
+    times = conn.execute(select(activities.c.happened_at)).scalars()
+    assert all(t.second == 0 and t.microsecond == 0 for t in times)
