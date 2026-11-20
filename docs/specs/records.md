@@ -4,7 +4,9 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Wh
 
 ## Records
 
-Every record has an id and the date and time it was created and last changed.
+Every record has an id, the date and time it was created and last changed, and who added it and who last changed it, as [sign-in.md](sign-in.md) sets out.
+
+An organization, contact or deal page shows, under its details, "Added by Sam Lee on 3 Nov 2026" and, once it has been changed, "Last changed by Ingo Prause on 18 Nov 2026".
 
 ## Deleting
 

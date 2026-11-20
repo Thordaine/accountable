@@ -58,5 +58,6 @@ In the Deals table, a late deal's close date shows in Raspberry with a "Late" ba
 ## Deal page
 
 - The deal's details: stage, value, probability, expected revenue, close date, organization and main contact (each linking to its page), with Edit and Delete. A late deal has a "Late" badge and says "This deal is past its close date."
+- Who added it and who last changed it, as [records.md](records.md) sets out.
 - A stage selector, which follows the stage rules above. A deal moved this way goes to the top of its new column.
 - Its timeline, with a form at the top to log an activity.

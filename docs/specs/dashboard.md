@@ -2,7 +2,7 @@
 
 Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index.
 
-All figures come from the data. Money is in US dollars, and "last 12 months" means the current month and the 11 before it. The title shows today's date, such as "Monday 16 November 2026".
+All figures come from the data, which the whole team shares, so the follow-ups and recent activity are everyone's. Money is in US dollars, and "last 12 months" means the current month and the 11 before it. The title shows today's date, such as "Monday 16 November 2026".
 
 The layout follows mockup B, top to bottom:
 

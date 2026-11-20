@@ -47,7 +47,7 @@
 ## Sign-in, search and a user menu (branch `multi-user`)
 
 - [x] Plan: `docs/changes/multi-user/intent.md`
-- [ ] Design: `docs/spec.md` split into a summary with an index and one area file per area in `docs/specs/`; the change itself not yet designed
+- [x] Design: `docs/spec.md` split into a summary with an index and one area file per area in `docs/specs/`; the change described in the summary and the area files, with new `sign-in.md`, `search.md` and `running.md`
 - [ ] Build
 - [ ] Test
 - [ ] Deploy

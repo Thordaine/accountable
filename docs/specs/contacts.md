@@ -32,5 +32,6 @@ The Contacts table has a status filter above it: All, Lead, Qualified, Customer.
 ## Contact page
 
 - The contact's details and status, with Edit and Delete, a link to their organization and their email as a mail link.
+- Who added them and who last changed them, as [records.md](records.md) sets out.
 - The deals where they're the main contact, linking to each.
 - Their timeline, with a form at the top to log an activity.

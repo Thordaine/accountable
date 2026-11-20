@@ -10,6 +10,9 @@ The brand skill (`.claude/skills/brand/SKILL.md`) sets fonts, colors, surfaces a
 - Stages use the brand colors in order: New Sea Green, Qualified Marigold, Proposal Coral, Negotiation Cerulean. Won is Midnight (Sea Mist in dark mode) and Lost is Raspberry.
 - Contact status: Lead Marigold, Qualified Cerulean, Customer Sea Green.
 - The active tab is Midnight in light mode and Sea Mist in dark mode.
+- The user menu's initials button is a Midnight circle with white initials in light mode, and a Sea Mist circle with Midnight initials in dark mode.
+- The search dropdown and the user menu are rounded panels like the rest, raised above the page with a soft shadow and no outline. The highlighted search match has the page background color behind it.
+- The sign-in screen follows the same frame: the page background, one rounded panel, Instrument Sans and the brand colors, with the **Sign in** button in the same Sea Green as **Add deal**.
 - Every color is a named token defined in one place, with a light and a dark value. Screens and charts use only the tokens.
 - Both modes meet WCAG 2.2 AA contrast: at least 4.5:1 for normal text, and 3:1 for large text and for the parts that carry meaning, such as badges, chart lines and bars, checkboxes and focus rings. Text-field borders are the exception: each field has a label, and the focus ring shows the one being typed in.
 - Money always shows its currency, such as "US$48,200", or "US$48k" and "US$1.2M" where space is short.

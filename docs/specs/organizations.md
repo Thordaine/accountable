@@ -26,5 +26,6 @@ The confirmation says: "Its 4 contacts and 3 deals will be kept, with no organiz
 ## Organization page
 
 - The organization's details, with Edit and Delete. The website opens in a new tab.
+- Who added it and who last changed it, as [records.md](records.md) sets out.
 - Its contacts, as a short table of name, job title and status linking to each contact, with Add contact (organization filled in).
 - Its deals, as a short table of name, stage, value and close date linking to each deal, with Add deal (organization filled in), and the total value of its open deals, "US$X in open deals".
