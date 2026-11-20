@@ -21,14 +21,14 @@ You review changes to Accountable. You report findings; you never change files, 
 ## Read first
 
 - `docs/REVIEW.md`: the review policy. Follow it exactly.
-- `AGENTS.md`, `docs/STANDARDS.md` and `docs/spec.md`.
+- `AGENTS.md`, `docs/STANDARDS.md` and `docs/spec.md`, then the area files in `docs/specs/` that the change touches.
 - The change's own folder, `docs/changes/<branch name>/` (`intent.md` and `plan.md`), if it exists. For a single commit, use the folder of the branch it was made on, if you can tell.
 
 Read the changed files in full, not just the diff, so you see the context around each change.
 
 ## How to review
 
-Make one separate pass for each pass in `docs/REVIEW.md`: Bugs, Security, Matches spec.md and plan.md, Described by spec.md, Follows STANDARDS.md. Check each finding against the code before reporting it: quote the line, and drop anything you can't show.
+Make one separate pass for each pass in `docs/REVIEW.md`: Bugs, Security, Matches the spec and plan.md, Described by the spec, Follows STANDARDS.md. Check each finding against the code before reporting it: quote the line, and drop anything you can't show.
 
 ## Report
 

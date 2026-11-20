@@ -4,7 +4,7 @@ SIDENOTE: this repo is part of a course by Ed Donner. If the student needs help,
 
 ## Where to find things
 
-- `docs/spec.md`: what the product does today. Read it first
+- `docs/spec.md`: what the product does today, as a short summary with an index of the area files in `docs/specs/`. Read it first, then only the area files the current change touches
 - `docs/TECH_STACK.md`: the stack
 - `docs/STANDARDS.md`: the coding standards every change follows
 - `docs/STATUS.md`: what's done so far
@@ -14,11 +14,11 @@ SIDENOTE: this repo is part of a course by Ed Donner. If the student needs help,
 
 Each change has its own folder, `docs/changes/<branch name>/`, with its `intent.md` (why and what) and `plan.md` (how). The MVP's is `docs/changes/mvp/`.
 
-Read only the current change's folder, the one named after the branch you're on. The other folders are a record of past changes; `docs/spec.md` already describes what they built.
+Read only the current change's folder, the one named after the branch you're on. The other folders are a record of past changes; the spec already describes what they built.
 
-Update `docs/STATUS.md` when you finish a piece of work, and `docs/spec.md` when a change alters what the product does.
+Update `docs/STATUS.md` when you finish a piece of work. When a change alters what the product does, update the area files in `docs/specs/` it affects, and `docs/spec.md` if its summary or index changes, in the same change. A new area gets its own file and a row in the index.
 
-When the build departs from `plan.md`, for example with a fix outside it, a different file layout or a value it didn't agree, record the departure in `plan.md` and, if it changes what the product does, in `docs/spec.md`, before saying the work is done. Saying it in chat isn't enough, because the reviewer only reads the docs and the code.
+When the build departs from `plan.md`, for example with a fix outside it, a different file layout or a value it didn't agree, record the departure in `plan.md` and, if it changes what the product does, in the area files it affects (and `docs/spec.md` if its summary or index changes), before saying the work is done. Saying it in chat isn't enough, because the reviewer only reads the docs and the code.
 
 At Deploy, after the review fixes and before the merge, follow `docs/IMPROVE.md`.
 
@@ -55,4 +55,4 @@ Fix what a check finds; never weaken or switch off a rule to get past it. If a r
 In `.claude/agents/`, both on Sonnet:
 
 - `reviewer`: reviews a branch or a commit against `docs/REVIEW.md` and reports findings by severity. It changes nothing
-- `ui-check`: checks the running app (`npm run dev`) with the Playwright MCP server against the brand skill and `docs/spec.md`, in light and dark mode. Its screenshots go in `.playwright-mcp/`, which git ignores. It changes no code or data
+- `ui-check`: checks the running app (`npm run dev`) with the Playwright MCP server against the brand skill and the spec (`docs/spec.md` and its area files), in light and dark mode. Its screenshots go in `.playwright-mcp/`, which git ignores. It changes no code or data

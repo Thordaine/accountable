@@ -44,6 +44,14 @@
 - [x] `ui-check` (`.claude/agents/ui-check.md`, Sonnet): checks the running app with the Playwright MCP server against the brand skill and the spec; a hook keeps every file it saves, screenshots included, in `.playwright-mcp/`
 - [ ] Try each one (needs a Claude Code restart to load them)
 
+## Sign-in, search and a user menu (branch `multi-user`)
+
+- [x] Plan: `docs/changes/multi-user/intent.md`
+- [ ] Design: `docs/spec.md` split into a summary with an index and one area file per area in `docs/specs/`; the change itself not yet designed
+- [ ] Build
+- [ ] Test
+- [ ] Deploy
+
 ## Run it
 
 Needs Node 24 or later, [uv](https://docs.astral.sh/uv/), Google Chrome and, for `npm run check`, [gitleaks](https://github.com/gitleaks/gitleaks) 8.25 or later.
