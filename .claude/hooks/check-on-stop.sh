@@ -12,7 +12,8 @@ fi
 cd "$CLAUDE_PROJECT_DIR"
 log=logs/check-quick.log
 mkdir -p logs
-if npm run check:quick > "$log" 2>&1; then
+# Its own coverage folder, so it can run while another check is running.
+if COVERAGE_RUN=stop-hook npm run check:quick > "$log" 2>&1; then
   exit 0
 fi
 sed -i 's/\x1b\[[0-9;]*m//g' "$log"

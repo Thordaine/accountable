@@ -45,7 +45,7 @@ Fix what a check finds; never weaken or switch off a rule to get past it. If a r
 
 - Git pre-commit (lefthook, `lefthook.yml`, installed by `npm install`): formats the staged files and stages the result, then runs ESLint and ruff check on the staged files, tsc and ty, and gitleaks on the staged changes. It skips the tests, so it stays quick
 - Claude Code (`.claude/settings.json`, scripts in `.claude/hooks/`):
-  - when Claude finishes a turn, `npm run check:quick` runs; a failure is sent back to Claude to fix, once per turn (the full output is in `logs/check-quick.log`)
+  - when Claude finishes a turn, `npm run check:quick` runs, with its own coverage folder (`COVERAGE_RUN=stop-hook`), so it can run beside another check; a failure is sent back to Claude to fix, once per turn (the full output is in `logs/check-quick.log`)
   - Claude may not edit `.env`, through its file tools or through a shell command that names it
   - the reviewer subagent may run only shell commands that read (`.claude/hooks/reviewer-read-only.sh`)
   - the ui-check subagent may save files only in `.playwright-mcp/`, and every screenshot must name its file (`.claude/hooks/ui-check-output-dir.sh`)

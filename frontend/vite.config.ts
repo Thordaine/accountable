@@ -14,6 +14,7 @@ export default defineConfig({
     css: { include: [/tokens\.css/] },
     coverage: {
       provider: "v8",
+      reportsDirectory: `coverage/${process.env.COVERAGE_RUN ?? "check"}`,
       include: ["src/**/*.{ts,tsx}"],
       reporter: ["text"],
       thresholds: { lines: 80 },
