@@ -6,6 +6,6 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Th
 - Typing opens a dropdown of matches below it, updated as you type. It searches every organization, contact and deal on the server, not just those on screen.
 - It matches names only, by any part of the name, ignoring case and treating every character literally. Spaces at either end are ignored, and an empty box closes the dropdown.
 - Matches are grouped under Organizations, Contacts and Deals, in that order, with up to 5 of each, sorted by name. A group with no matches isn't shown.
-- Contacts and deals show their organization as a hint, when they have one.
+- Contacts and deals show their organization as a hint, when they have one. The hint is shown in full, taking up to half the row; a long name wraps beside it.
 - With no matches at all, "No matches for "<text>"".
 - Up and Down move through the matches, and the first is highlighted to start with. Enter, or a click, opens the highlighted match's page and closes the dropdown. Opening a match empties the box. Escape closes the dropdown, and so does a click outside it; both keep the typed text, and typing again reopens the dropdown.

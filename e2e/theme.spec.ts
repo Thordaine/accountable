@@ -124,7 +124,7 @@ test("dialogs, toasts and the menu use the dark colors", async ({ page }) => {
   await page.keyboard.press("Escape");
 
   await page.getByRole("button", { name: "Add deal" }).click();
-  await expect(page.locator(".dialog-panel")).toHaveCSS("background-color", BLACK);
+  await expect(page.locator(".dialog-panel")).toHaveCSS("background-color", "rgb(11, 47, 59)");
   await page.keyboard.press("Escape");
 
   await page.goto(`/contacts/${contact.id}`);

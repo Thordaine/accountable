@@ -4,13 +4,14 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index.
 
 The brand skill (`.claude/skills/brand/SKILL.md`) sets fonts, colors, surfaces and tone, and takes priority over general design guidance.
 
-- Instrument Sans for headings and body, JetBrains Mono for figures, money and dates in tables.
+- Instrument Sans for headings and body, JetBrains Mono for figures, money and dates in tables. Figures, money, dates and phone numbers in tables stay on one line.
 - Light mode: page background `#F0F4F5`, white rounded panels with no outline, Midnight ink.
 - Dark mode: page background `#04232E`, black rounded panels with no outline, Sea Mist ink. Sea Green, Marigold, Cerulean and Raspberry text is lightened rather than darkened.
 - Stages use the brand colors in order: New Sea Green, Qualified Marigold, Proposal Coral, Negotiation Cerulean. Won is Midnight (Sea Mist in dark mode) and Lost is Raspberry.
 - Contact status: Lead Marigold, Qualified Cerulean, Customer Sea Green.
 - The active tab is Midnight in light mode and Sea Mist in dark mode.
 - The user menu's initials button is a Midnight circle with white initials in light mode, and a Sea Mist circle with Midnight initials in dark mode.
+- Dialogs are rounded panels with no outline: white in light mode, and in dark mode the raised surface (`#0B2F3B`) rather than black, so they stand out from the black panels behind them.
 - The search dropdown and the user menu are rounded panels like the rest, raised above the page with a soft shadow and no outline. The highlighted search match has the page background color behind it.
 - The sign-in screen follows the same frame: the page background, one rounded panel, Instrument Sans and the brand colors, with the **Sign in** button in the same Sea Green as **Add deal**.
 - Every color is a named token defined in one place, with a light and a dark value. Screens and charts use only the tokens.

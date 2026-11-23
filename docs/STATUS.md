@@ -54,6 +54,7 @@
   - [x] Phase 2: search across organizations, contacts and deals in the top bar
   - [x] Phase 3: the user menu (initials, Light, Dark or System, Sign out) in place of the dark mode toggle
 - [ ] Test
+  - [x] ui-check of every page signed in, light and dark; fixed phone numbers wrapping in Contacts, the search hint being cut off, and the dark dialog blending into the page
 - [ ] Deploy
 
 ## Run it

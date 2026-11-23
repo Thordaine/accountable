@@ -257,6 +257,9 @@ table.data td .mono {
   font-family: var(--mono);
   font-size: 14px;
 }
+table.data td.mono {
+  white-space: nowrap;
+}
 .row-actions {
   text-align: right;
   white-space: nowrap;
@@ -321,6 +324,7 @@ table.data td .mono {
 .dialog-panel {
   width: 560px;
   max-width: 100%;
+  background: var(--raised);
 }
 .dialog-panel h2 {
   font-size: 20px;
