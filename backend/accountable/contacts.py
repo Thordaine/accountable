@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Response
 from sqlalchemy import Connection, Select, delete, func, select, update
 
+from accountable.auth import CurrentUser
 from accountable.db import (
     DbConn,
     activities,
@@ -59,16 +60,18 @@ def read_contact(contact_id: int, conn: DbConn):
 
 
 @router.post("", status_code=201, response_model=ContactOut)
-def create_contact(body: ContactIn, conn: DbConn):
-    new_id = insert_row(conn, contacts, body.model_dump())
+def create_contact(body: ContactIn, conn: DbConn, user: CurrentUser):
+    new_id = insert_row(conn, contacts, body.model_dump(), by=user.name)
     return get_contact(conn, new_id)
 
 
 @router.put("/{contact_id}", response_model=ContactOut)
-def replace_contact(contact_id: int, body: ContactIn, conn: DbConn):
+def replace_contact(contact_id: int, body: ContactIn, conn: DbConn, user: CurrentUser):
     get_or_404(conn, contacts, contact_id)
     conn.execute(
-        update(contacts).where(contacts.c.id == contact_id).values(**body.model_dump())
+        update(contacts)
+        .where(contacts.c.id == contact_id)
+        .values(**body.model_dump(), updated_by=user.name)
     )
     return get_contact(conn, contact_id)
 
@@ -85,10 +88,12 @@ def contact_impact(contact_id: int, conn: DbConn):
 
 
 @router.delete("/{contact_id}", status_code=204)
-def delete_contact(contact_id: int, conn: DbConn):
+def delete_contact(contact_id: int, conn: DbConn, user: CurrentUser):
     get_or_404(conn, contacts, contact_id)
     conn.execute(
-        update(deals).where(deals.c.contact_id == contact_id).values(contact_id=None)
+        update(deals)
+        .where(deals.c.contact_id == contact_id)
+        .values(contact_id=None, updated_by=user.name)
     )
     conn.execute(delete(activities).where(activities.c.contact_id == contact_id))
     conn.execute(delete(contacts).where(contacts.c.id == contact_id))

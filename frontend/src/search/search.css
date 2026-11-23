@@ -1,0 +1,78 @@
+/* The top bar's search box and its dropdown of matches. */
+.search-box {
+  flex: 0 1 240px;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: var(--page);
+  color: var(--muted);
+}
+.search-box:focus-within {
+  outline: 3px solid var(--ceru);
+  outline-offset: 2px;
+}
+.search-box svg {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.search-box input {
+  font: inherit;
+  width: 100%;
+  min-width: 0;
+  padding: 9px 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.search-box input:focus-visible {
+  outline: none;
+}
+.search-box input::placeholder {
+  color: var(--muted);
+}
+.search-options {
+  width: 340px;
+  max-height: min(70vh, 620px);
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--raised);
+  box-shadow: var(--shadow-menu);
+  z-index: 60;
+}
+.search-group {
+  padding: 8px 10px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.search-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.search-option[data-focus] {
+  background: var(--page);
+}
+.search-hint {
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.search-none {
+  padding: 10px;
+  color: var(--muted);
+}

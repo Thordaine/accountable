@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router";
 import { DealForm } from "../forms/DealForm";
-import { ThemeToggle } from "./ThemeToggle";
+import { SearchBox } from "../search/SearchBox";
+import { UserMenu } from "./UserMenu";
 
 const SECTIONS = [
   ["/", "Dashboard"],
@@ -11,7 +12,7 @@ const SECTIONS = [
   ["/pipeline", "Pipeline"],
 ] as const;
 
-/** The top bar: brand, the five sections, Add deal and the dark mode toggle. */
+/** The top bar: brand, the five sections, search, Add deal and the user menu. */
 export function NavBar() {
   const [adding, setAdding] = useState(false);
   return (
@@ -26,10 +27,11 @@ export function NavBar() {
           </NavLink>
         ))}
       </div>
+      <SearchBox />
       <button className="btn" type="button" onClick={() => setAdding(true)}>
         Add deal
       </button>
-      <ThemeToggle />
+      <UserMenu />
       {adding && <DealForm onDone={() => setAdding(false)} />}
     </nav>
   );

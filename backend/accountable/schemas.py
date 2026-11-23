@@ -6,6 +6,7 @@ from typing import Annotated, Literal, get_args
 
 from pydantic import (
     AfterValidator,
+    AwareDatetime,
     BaseModel,
     BeforeValidator,
     Field,
@@ -59,6 +60,8 @@ class Record(BaseModel):
     id: int
     created_at: datetime
     updated_at: datetime
+    created_by: str
+    updated_by: str
 
 
 class OrganizationIn(BaseModel):
@@ -112,7 +115,7 @@ class ActivityIn(BaseModel):
     contact_id: int | None = None
     deal_id: int | None = None
     description: Name
-    happened_at: datetime
+    happened_at: AwareDatetime
     follow_up_date: date | None = None
     done: bool = False
 

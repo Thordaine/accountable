@@ -7,7 +7,7 @@ test("add, find, sort, edit, filter and delete a contact", async ({ page }) => {
   const before = Number((await page.locator(".count").textContent())!.split(" of ")[1].split(" ")[0]);
   await page.getByRole("button", { name: "Add contact" }).click();
   await page.getByLabel("Name").fill("Priya Raman");
-  await page.getByRole("combobox", { name: "Organization" }).fill("Calder");
+  await page.getByRole("combobox", { name: "Organization", exact: true }).fill("Calder");
   await page.getByRole("option", { name: "Calder Foods" }).click();
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByText("Contact saved")).toBeVisible();

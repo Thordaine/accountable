@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Response
 from sqlalchemy import Connection, Select, delete, func, select, update
 
+from accountable.auth import CurrentUser
 from accountable.contacts import contact_query
 from accountable.db import (
     DbConn,
@@ -75,18 +76,20 @@ def read_organization(org_id: int, conn: DbConn):
 
 
 @router.post("", status_code=201, response_model=OrganizationOut)
-def create_organization(body: OrganizationIn, conn: DbConn):
-    new_id = insert_row(conn, organizations, body.model_dump())
+def create_organization(body: OrganizationIn, conn: DbConn, user: CurrentUser):
+    new_id = insert_row(conn, organizations, body.model_dump(), by=user.name)
     return get_org(conn, new_id)
 
 
 @router.put("/{org_id}", response_model=OrganizationOut)
-def replace_organization(org_id: int, body: OrganizationIn, conn: DbConn):
+def replace_organization(
+    org_id: int, body: OrganizationIn, conn: DbConn, user: CurrentUser
+):
     get_or_404(conn, organizations, org_id)
     conn.execute(
         update(organizations)
         .where(organizations.c.id == org_id)
-        .values(**body.model_dump())
+        .values(**body.model_dump(), updated_by=user.name)
     )
     return get_org(conn, org_id)
 
@@ -103,17 +106,17 @@ def organization_impact(org_id: int, conn: DbConn):
 
 
 @router.delete("/{org_id}", status_code=204)
-def delete_organization(org_id: int, conn: DbConn):
+def delete_organization(org_id: int, conn: DbConn, user: CurrentUser):
     get_or_404(conn, organizations, org_id)
     conn.execute(
         update(contacts)
         .where(contacts.c.organization_id == org_id)
-        .values(organization_id=None)
+        .values(organization_id=None, updated_by=user.name)
     )
     conn.execute(
         update(deals)
         .where(deals.c.organization_id == org_id)
-        .values(organization_id=None)
+        .values(organization_id=None, updated_by=user.name)
     )
     conn.execute(delete(organizations).where(organizations.c.id == org_id))
     return Response(status_code=204)

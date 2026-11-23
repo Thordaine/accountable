@@ -46,3 +46,11 @@ test("an unknown contact shows Contact not found", async () => {
     await screen.findByRole("heading", { name: "Contact not found" }),
   ).toBeInTheDocument();
 });
+
+test("says who added it and when, and nothing about changes until it's changed", async () => {
+  renderApp("/contacts/1");
+  expect(
+    await screen.findByText("Added by Sam Lee on 5 Jan 2026"),
+  ).toBeVisible();
+  expect(screen.queryByText(/Last changed/)).toBeNull();
+});

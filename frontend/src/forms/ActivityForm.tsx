@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, formatISO, parseISO } from "date-fns";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ApiError } from "../api/client";
@@ -20,7 +20,10 @@ type Values = {
   follow_up_date: string;
 };
 
-const nowLocal = () => format(new Date(), "yyyy-MM-dd'T'HH:mm");
+/** A time as the datetime-local input shows it, in the browser's zone. */
+const toInput = (date: Date) => format(date, "yyyy-MM-dd'T'HH:mm");
+
+const nowLocal = () => toInput(new Date());
 
 const blank = (): Values => ({
   type: "note",
@@ -32,7 +35,7 @@ const blank = (): Values => ({
 const fromActivity = (a: Activity): Values => ({
   type: a.type as ActivityType,
   description: a.description,
-  happened_at: a.happened_at.slice(0, 16),
+  happened_at: toInput(parseISO(a.happened_at)),
   follow_up_date: a.follow_up_date ?? "",
 });
 
@@ -64,6 +67,7 @@ function body(
     ...values,
     ...record,
     description: values.description.trim(),
+    happened_at: formatISO(parseISO(values.happened_at)),
     follow_up_date: orNull(values.follow_up_date),
     done,
   };

@@ -1,4 +1,5 @@
 from conftest import add
+from other_user import sign_in_as
 
 
 def test_org_requires_name(client):
@@ -42,3 +43,20 @@ def test_delete_org_keeps_links(client):
             client.get(f"/api/{kind}/{record['id']}").json()["organization_id"] is None
         )
     assert client.get(f"/api/organizations/{org['id']}").status_code == 404
+
+
+def test_org_records_who_added_and_changed(client):
+    org = add(client, "organizations", name="Calder Foods")
+    assert (org["created_by"], org["updated_by"]) == ("Test User", "Test User")
+    sign_in_as(client, "Sam Lee")
+    changed = client.put(f"/api/organizations/{org['id']}", json={"name": "Calder"})
+    assert (changed.json()["created_by"], changed.json()["updated_by"]) == (
+        "Test User",
+        "Sam Lee",
+    )
+
+
+def test_org_times_end_in_z(client):
+    org = add(client, "organizations", name="Calder Foods")
+    assert org["created_at"].endswith("Z")
+    assert org["updated_at"].endswith("Z")

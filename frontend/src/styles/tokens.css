@@ -83,7 +83,7 @@
   --mono: "JetBrains Mono Variable", ui-monospace, monospace;
 }
 
-/* Dark mode, set by the toggle on <html>. Tokens not listed keep their light value. */
+/* Dark mode, set on <html> from the user menu. Tokens not listed keep their light value. */
 :root[data-theme="dark"] {
   color-scheme: dark;
 

@@ -39,6 +39,7 @@ export function Organization() {
       <div className="record-grid">
         <Panel title="Details">
           <Details
+            stamped={org}
             items={[
               [
                 "Website",

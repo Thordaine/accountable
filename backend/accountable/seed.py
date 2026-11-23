@@ -1,7 +1,7 @@
 """Sample data, with dates relative to the day it's seeded. Run: python -m accountable.seed"""
 
 import random
-from datetime import date, datetime, time, timedelta
+from datetime import UTC, date, datetime, time, timedelta
 
 from sqlalchemy import Connection, delete, func, insert, select
 
@@ -9,14 +9,16 @@ from accountable.dashboard import month_start
 from accountable.db import (
     activities,
     contacts,
-    db_path,
     deals,
-    engine_for,
     insert_row,
-    metadata,
+    make_engine,
+    new_stamps,
     organizations,
 )
+from accountable.migrate import upgrade
 from accountable.schemas import OPEN_STAGES, STAGES, USUAL_PROBABILITY
+
+SAMPLE_DATA = "Sample data"
 
 ORGANIZATIONS = [
     ("Halden Freight", "haldenfreight.com", "Logistics"),
@@ -179,7 +181,12 @@ FOLLOW_UPS = [
 
 def at(day: date, rng: random.Random) -> datetime:
     """A working-hours time on the given day."""
-    return datetime.combine(day, time(rng.randint(8, 17), rng.choice((0, 15, 30, 45))))
+    return local_time(day, time(rng.randint(8, 17), rng.choice((0, 15, 30, 45))))
+
+
+def local_time(day: date, moment: time) -> datetime:
+    """The given day and time in the computer's own zone, in UTC."""
+    return datetime.combine(day, moment).astimezone(UTC)
 
 
 def closed_dates(today: date, per_month: list[int], rng: random.Random) -> list[date]:
@@ -200,7 +207,7 @@ def insert_organizations(conn: Connection) -> list[int]:
     rows[2]["notes"] = (
         "Family-owned, three plants.\nAnnual budget cycle starts in October."
     )
-    return [insert_row(conn, organizations, row) for row in rows]
+    return [insert_row(conn, organizations, row, by=SAMPLE_DATA) for row in rows]
 
 
 def insert_contacts(
@@ -222,7 +229,7 @@ def insert_contacts(
             "organization_id": None if org is None else org_ids[org],
             "phone": f"+1 {rng.randint(201, 989)} 555 {rng.randint(1000, 9999)}",
         }
-        ids.append(insert_row(conn, contacts, row))
+        ids.append(insert_row(conn, contacts, row, by=SAMPLE_DATA))
     return ids
 
 
@@ -274,7 +281,7 @@ def insert_deals(conn, org_ids, contact_ids, today, rng) -> list[dict]:
             "contact_id": contact,
         }
         row["position"] = sum(d["stage"] == row["stage"] for d in inserted)
-        row["id"] = insert_row(conn, deals, row)
+        row["id"] = insert_row(conn, deals, row, by=SAMPLE_DATA)
         inserted.append(row)
     return inserted
 
@@ -322,7 +329,9 @@ def make_customer(conn: Connection, contact_id: int, when: datetime) -> list[dic
     if status == "Customer":
         return []
     conn.execute(
-        contacts.update().where(contacts.c.id == contact_id).values(status="Customer")
+        contacts.update()
+        .where(contacts.c.id == contact_id)
+        .values(status="Customer", updated_by=SAMPLE_DATA)
     )
     return [auto(None, contact_id, f"Status changed from {status} to Customer", when)]
 
@@ -377,20 +386,21 @@ def seed(conn: Connection, today: date, now: time | None = None) -> None:
     contact_ids = insert_contacts(conn, org_ids, rng)
     inserted = insert_deals(conn, org_ids, contact_ids, today, rng)
     moment = now or datetime.now().time()
-    latest = datetime.combine(today, moment.replace(second=0, microsecond=0))
+    latest = local_time(today, moment.replace(second=0, microsecond=0))
     for entries in (
         history(conn, inserted, today, rng),
         logged(inserted, contact_ids, today, rng),
     ):
         for entry in entries:
             entry["happened_at"] = min(entry["happened_at"], latest)
+            entry |= new_stamps(SAMPLE_DATA)
         conn.execute(insert(activities), entries)
 
 
 def main() -> None:
-    """Seed the configured database and print the counts."""
-    engine = engine_for(db_path())
-    metadata.create_all(engine)
+    """Seed the local SQLite file, never DATABASE_URL, and print the counts."""
+    engine = make_engine(None)
+    upgrade(engine)
     with engine.begin() as conn:
         seed(conn, date.today())
         for table in (organizations, contacts, deals, activities):

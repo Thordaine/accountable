@@ -48,7 +48,11 @@
 
 - [x] Plan: `docs/changes/multi-user/intent.md`
 - [x] Design: `docs/spec.md` split into a summary with an index and one area file per area in `docs/specs/`; the change described in the summary and the area files, with new `sign-in.md`, `search.md` and `running.md`
-- [ ] Build
+- [x] Build: `docs/changes/multi-user/plan.md`, all 3 phases; departures under its "Changes during build"
+  - [x] Phase 1: Postgres or SQLite from `DATABASE_URL`, Alembic migrations on start, Supabase tokens and the local test sign-in, the sign-in screen, who added and changed each record, times in UTC with "today" in the browser's zone, `npm start` and `render.yaml`
+  - [x] Phase 1, step 5: `npm start` against the real Supabase project. The signing key is ES256, sign-in works, records show "Added by" the user's display name (the email when there is none), they survive a restart, and the sample data went in once
+  - [x] Phase 2: search across organizations, contacts and deals in the top bar
+  - [x] Phase 3: the user menu (initials, Light, Dark or System, Sign out) in place of the dark mode toggle
 - [ ] Test
 - [ ] Deploy
 
@@ -56,12 +60,13 @@
 
 Needs Node 24 or later, [uv](https://docs.astral.sh/uv/), Google Chrome and, for `npm run check`, [gitleaks](https://github.com/gitleaks/gitleaks) 8.25 or later.
 
-- `npm install` once, then `npm run dev` and open http://localhost:5173
+- `npm install` once, then `npm run dev` and open http://localhost:5173. Sign in as `test@example.com` with the password `test`
+- `npm start` builds the app and runs it against Supabase, with the settings in `.env` (see `docs/specs/running.md`), at http://localhost:8000
 - `npm test` runs the backend, frontend and end-to-end tests
 - `npm run check` runs every check and the tests; `npm run format` fixes the formatting
 - `npm run seed` resets the data to the sample data
 
-The data lives in `data/accountable.db` (or the file named by `ACCOUNTABLE_DB`). A new database gets the sample data by itself.
+Local data lives in `data/accountable.db` (or the file named by `ACCOUNTABLE_DB`); the shared app's is in Supabase. Each start brings the database up to date, and a new database gets the sample data by itself.
 
 ## Known limits
 

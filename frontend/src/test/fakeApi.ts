@@ -12,6 +12,8 @@ import { isoDate } from "../lib/format";
 const stamps = {
   created_at: "2026-01-05T09:00:00",
   updated_at: "2026-01-05T09:00:00",
+  created_by: "Sam Lee",
+  updated_by: "Sam Lee",
 };
 const inDays = (days: number) => isoDate(addDays(new Date(), days));
 
@@ -167,12 +169,23 @@ const records: Record<string, unknown> = {
   "/deals/1": { ...ovens, timeline: [] },
   "/deals/1/impact": { activities: 0 },
   "/dashboard": dashboard,
+  "/config": { mode: "local" },
+  "/me": { name: "Test User", email: "test@example.com" },
 };
 
 export type Request = { method: string; path: string; body?: unknown };
 
+/** Answer the local sign-in as the backend would. */
+function signIn(body: unknown) {
+  const { email, password } = body as { email: string; password: string };
+  if (email === "test@example.com" && password === "test")
+    return Response.json({ token: "local-test-user" });
+  return Response.json({ detail: "Wrong email or password" }, { status: 401 });
+}
+
 /** Answer a request as the backend would, from the records above. */
 function respond({ method, path, body }: Request) {
+  if (path === "/local-sign-in") return signIn(body);
   if (method === "DELETE") return new Response(null, { status: 204 });
   if (method !== "GET") return Response.json({ id: 99, ...(body as object) });
   if (path in records) return Response.json(records[path]);

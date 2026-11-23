@@ -2,6 +2,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, Outlet, type RouteObject } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { Toaster } from "sonner";
+import { AuthProvider } from "./auth/AuthProvider";
+import type { Session } from "./auth/session";
 import { NavBar } from "./components/NavBar";
 import { Contact } from "./pages/Contact";
 import { Contacts } from "./pages/Contacts";
@@ -43,11 +45,13 @@ export const routes: RouteObject[] = [
 
 const router = createBrowserRouter(routes);
 
-/** Providers and routes. */
-export default function App() {
+/** Providers and routes, behind the sign-in. */
+export default function App({ session }: { session: Session }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <AuthProvider session={session}>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

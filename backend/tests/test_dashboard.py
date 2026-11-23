@@ -1,5 +1,5 @@
 import time
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 
 from sqlalchemy import insert
 
@@ -91,7 +91,7 @@ def test_follow_ups_window(client):
             "activities",
             type="call",
             description=name,
-            happened_at="2026-11-01T09:00",
+            happened_at="2026-11-01T09:00Z",
             follow_up_date=due,
             **record,
             **extra,
@@ -130,7 +130,7 @@ def test_recent_limit(client):
             type="note",
             contact_id=ann["id"],
             description=f"Day {day}",
-            happened_at=f"2026-11-{day:02d}T09:00",
+            happened_at=f"2026-11-{day:02d}T09:00Z",
         )
     deal = add(client, "deals", name="Renewal")
     client.post(
@@ -144,13 +144,16 @@ def test_recent_limit(client):
 
 
 def test_thousand_records(client):
-    now = datetime(2026, 11, 1, 9, 0)
+    now = datetime(2026, 11, 1, 9, 0, tzinfo=UTC)
+    by = {"created_by": "Test User", "updated_by": "Test User"}
     with client.app.state.engine.begin() as conn:
-        conn.execute(insert(organizations), [{"name": f"Org {i}"} for i in range(1000)])
+        conn.execute(
+            insert(organizations), [{"name": f"Org {i}"} | by for i in range(1000)]
+        )
         conn.execute(
             insert(contacts),
             [
-                {"name": f"Person {i}", "status": "Lead", "organization_id": i + 1}
+                {"name": f"Person {i}", "status": "Lead", "organization_id": i + 1} | by
                 for i in range(1000)
             ],
         )
@@ -167,6 +170,7 @@ def test_thousand_records(client):
                     "organization_id": i + 1,
                     "contact_id": i + 1,
                 }
+                | by
                 for i in range(1000)
             ],
         )
@@ -180,6 +184,7 @@ def test_thousand_records(client):
                     "contact_id": i + 1,
                     "follow_up_date": date(2026, 11, 16),
                 }
+                | by
                 for i in range(1000)
             ],
         )

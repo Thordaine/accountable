@@ -86,6 +86,7 @@ function Entry({
         <div className="what">{activity.description}</div>
         <div className="meta">
           <span className="when">{formatDateTime(activity.happened_at)}</span>
+          <span>by {activity.created_by}</span>
           {showDealName && activity.deal_id && (
             <span>
               On deal:{" "}

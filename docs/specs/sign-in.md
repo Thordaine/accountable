@@ -18,7 +18,7 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Th
 
 - The server checks the sign-in on every request and takes who you are from it, never from anything else the browser sends. Signed out, every API route refuses.
 - Everyone who can sign in can do everything. There are no roles.
-- A person goes by the display name set for them in Supabase's dashboard, or their email if they have none.
+- A person goes by the `display_name` in their Supabase user metadata, or their email if they have none. Supabase's Add user dialog doesn't ask for a name, so it is set in the SQL editor: `update auth.users set raw_user_meta_data = coalesce(raw_user_meta_data, '{}'::jsonb) || '{"display_name": "<name>"}' where email = '<email>';`. A new or changed name shows from their next sign-in; records already saved keep the name they were saved with.
 - Their initials come from that name: the first letters of its first and last words, in capitals, such as "IP" for "Ingo Prause". A one-word name, or an email, gives its first letter.
 
 ## Who added a record

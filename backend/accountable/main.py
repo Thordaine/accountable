@@ -1,23 +1,26 @@
-"""The FastAPI app: lifespan, routers and health check."""
+"""The FastAPI app: lifespan, routers, health check and the built frontend."""
 
-import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 
-from accountable import activities, contacts, dashboard, deals, organizations
-from accountable.db import db_path, engine_for, get_today, metadata
+from accountable import activities, contacts, dashboard, deals, organizations, search
+from accountable.auth import add_sign_in, current_user
+from accountable.db import get_today, make_engine
+from accountable.migrate import upgrade
 from accountable.seed import seed
+from accountable.settings import Settings, load_settings
+from accountable.web import FRONTEND_DIST, serve_frontend
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Open the database, creating and seeding it if it's new or ACCOUNTABLE_RESET=1."""
-    path = db_path()
-    is_new = not path.exists()
-    engine = engine_for(path)
-    metadata.create_all(engine)
-    if is_new or os.environ.get("ACCOUNTABLE_RESET") == "1":
+    """Bring the database up to date, seeding it when it was just created or a local run asks."""
+    settings: Settings = app.state.settings
+    engine = make_engine(settings.database_url)
+    created = upgrade(engine)
+    if created or (settings.is_local and settings.reset):
         with engine.begin() as conn:
             seed(conn, get_today())
     app.state.engine = engine
@@ -25,17 +28,18 @@ async def lifespan(app: FastAPI):
     engine.dispose()
 
 
-def create_app() -> FastAPI:
-    """Build the app with all its routes."""
+def create_app(frontend: Path = FRONTEND_DIST) -> FastAPI:
+    """Build the app with all its routes, the record routes for signed-in people only."""
     app = FastAPI(title="Accountable", lifespan=lifespan)
-
-    for module in (organizations, contacts, deals, activities, dashboard):
-        app.include_router(module.router)
 
     @app.get("/api/health")
     def health():
         return {"status": "ok"}
 
+    add_sign_in(app, load_settings())
+    for module in (organizations, contacts, deals, activities, dashboard, search):
+        app.include_router(module.router, dependencies=[Depends(current_user)])
+    serve_frontend(app, frontend)
     return app
 
 

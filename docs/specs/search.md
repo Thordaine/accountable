@@ -8,4 +8,4 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Th
 - Matches are grouped under Organizations, Contacts and Deals, in that order, with up to 5 of each, sorted by name. A group with no matches isn't shown.
 - Contacts and deals show their organization as a hint, when they have one.
 - With no matches at all, "No matches for "<text>"".
-- Up and Down move through the matches, and the first is highlighted to start with. Enter, or a click, opens the highlighted match's page, then empties the box and closes the dropdown. Escape closes the dropdown, and so does a click outside it.
+- Up and Down move through the matches, and the first is highlighted to start with. Enter, or a click, opens the highlighted match's page and closes the dropdown. Opening a match empties the box. Escape closes the dropdown, and so does a click outside it; both keep the typed text, and typing again reopens the dropdown.

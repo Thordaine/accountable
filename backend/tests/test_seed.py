@@ -1,8 +1,10 @@
-from datetime import date, timedelta
+from datetime import UTC, date, datetime, time, timedelta
 
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
+from accountable.auth import LOCAL_TOKEN
 from accountable.db import (
     activities,
     contacts,
@@ -11,10 +13,13 @@ from accountable.db import (
     metadata,
     organizations,
 )
+from accountable.main import create_app
 from accountable.schemas import OPEN_STAGES
-from accountable.seed import seed
+from accountable.seed import main, seed
+from computer_zone import computer_zone
 
 TODAY = date(2026, 11, 15)
+SIGNED_IN = {"Authorization": f"Bearer {LOCAL_TOKEN}"}
 FIRST_DAY = date(2025, 12, 1)
 
 
@@ -96,22 +101,54 @@ def test_seed_replaces(conn):
     assert count(conn, activities, activities.c.type != "auto") == 80
 
 
-def test_new_database_is_seeded(tmp_path, monkeypatch):
-    from fastapi.testclient import TestClient
+def test_everything_is_by_sample_data(conn):
+    for table in (organizations, contacts, deals, activities):
+        rows = conn.execute(select(table.c.created_by, table.c.updated_by)).all()
+        assert set(rows) == {("Sample data", "Sample data")}, table.name
 
-    from accountable.main import create_app
 
+def test_times_are_working_hours_in_the_computers_zone(tmp_path):
+    engine = engine_for(tmp_path / "zone.db")
+    metadata.create_all(engine)
+    with computer_zone("Pacific/Kiritimati"), engine.begin() as conn:
+        seed(conn, TODAY, time(23, 0))
+        logged = activities.c.type != "auto"
+        times = conn.execute(select(activities.c.happened_at).where(logged)).scalars()
+        hours = {t.astimezone().hour for t in times}
+    assert hours <= set(range(8, 18))
+
+
+def test_new_rows_are_created_and_updated_at_once(conn):
+    for table in (organizations, deals, activities):
+        rows = conn.execute(select(table.c.created_at, table.c.updated_at)).all()
+        assert all(created == updated for created, updated in rows), table.name
+
+
+def test_new_database_is_seeded_once(tmp_path, monkeypatch):
     monkeypatch.setenv("ACCOUNTABLE_DB", str(tmp_path / "new" / "fresh.db"))
-    with TestClient(create_app()) as client:
+    monkeypatch.delenv("ACCOUNTABLE_RESET", raising=False)
+    with TestClient(create_app(), headers=SIGNED_IN) as client:
         assert len(client.get("/api/deals").json()) == 50
+        client.post("/api/organizations", json={"name": "Added after seeding"})
+    with TestClient(create_app(), headers=SIGNED_IN) as client:
+        assert len(client.get("/api/organizations").json()) == 16
+
+
+def test_seed_command_opens_the_local_file(tmp_path, monkeypatch):
+    path = tmp_path / "local.db"
+    monkeypatch.setenv("ACCOUNTABLE_DB", str(path))
+    monkeypatch.setenv(
+        "DATABASE_URL", "postgresql://user:secret@db.example.com/postgres"
+    )
+    main()
+    with engine_for(path).connect() as conn:
+        assert count(conn, organizations) == 15
 
 
 def test_nothing_happens_after_seeding(conn):
-    from datetime import datetime, time
-
     for offset in range(60):
         day = date(2026, 11, 1) + timedelta(days=offset)
-        moment = datetime.combine(day, time(8, 0))
+        moment = datetime.combine(day, time(8, 0)).astimezone(UTC)
         seed(conn, day, time(8, 0))
         latest = conn.execute(select(func.max(activities.c.happened_at))).scalar()
         assert latest <= moment, day
@@ -119,8 +156,6 @@ def test_nothing_happens_after_seeding(conn):
 
 def test_seeded_times_are_whole_minutes(conn):
     """Seeded entries sort below a live entry logged in the same minute."""
-    from datetime import time
-
     seed(conn, date(2026, 11, 18), time(8, 0, 44, 347367))
     times = conn.execute(select(activities.c.happened_at)).scalars()
     assert all(t.second == 0 and t.microsecond == 0 for t in times)

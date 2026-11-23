@@ -68,6 +68,7 @@ export function Deal() {
             </select>
           </label>
           <Details
+            stamped={deal}
             items={[
               [
                 "Value",

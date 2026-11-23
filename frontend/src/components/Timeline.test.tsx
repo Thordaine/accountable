@@ -27,6 +27,8 @@ function entry(
     deal_name: null,
     created_at: happened_at,
     updated_at: happened_at,
+    created_by: "Sam Lee",
+    updated_by: "Sam Lee",
     ...extra,
   };
 }
@@ -38,7 +40,13 @@ const entries = [
     "auto",
     "Moved from Proposal to Negotiation",
     "2026-11-03T10:00:00",
-    { contact_id: null, deal_id: 5, deal_name: "Calder Foods renewal" },
+    {
+      contact_id: null,
+      deal_id: 5,
+      deal_name: "Calder Foods renewal",
+      created_by: "Ingo Prause",
+      updated_by: "Ingo Prause",
+    },
   ),
   entry(3, "call", "Discussed renewal terms", "2026-11-02T11:00:00", {
     follow_up_date: isoDate(subDays(new Date(), 1)),
@@ -86,5 +94,12 @@ test("a deal's entry on a contact's timeline names the deal", () => {
   setup();
   expect(within(items()[0]).getByText(/On deal:/)).toHaveTextContent(
     "On deal: Calder Foods renewal",
+  );
+});
+
+test("each entry shows who added it", () => {
+  setup();
+  expect(items().map((li) => within(li).getByText(/^by /).textContent)).toEqual(
+    ["by Ingo Prause", "by Sam Lee", "by Sam Lee"],
   );
 });

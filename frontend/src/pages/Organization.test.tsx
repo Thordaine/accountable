@@ -95,3 +95,11 @@ test("an unknown organization shows Organization not found", async () => {
     screen.getByRole("link", { name: "Back to Organizations" }),
   ).toHaveAttribute("href", "/organizations");
 });
+
+test("says who added it and when, and nothing about changes until it's changed", async () => {
+  renderApp("/organizations/1");
+  expect(
+    await screen.findByText("Added by Sam Lee on 5 Jan 2026"),
+  ).toBeVisible();
+  expect(screen.queryByText(/Last changed/)).toBeNull();
+});

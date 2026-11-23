@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "dev": "concurrently -k -n api,web \"uv run uvicorn accountable.main:app --port 8000 --reload --reload-dir backend\" \"npm -w frontend run dev\"",
+    "start": "npm -w frontend run build && uv run --env-file .env uvicorn accountable.main:app --port 8000",
     "test": "concurrently -m 1 --success all -n backend,frontend,e2e \"npm run test:backend\" \"npm run test:frontend\" \"npm run test:e2e\"",
     "test:backend": "uv run pytest --cov --cov-report=term-missing",
     "test:frontend": "npm -w frontend run test",

@@ -3,6 +3,7 @@
 from fastapi import APIRouter, HTTPException, Response
 from sqlalchemy import Connection, Select, delete, select, update
 
+from accountable.auth import CurrentUser
 from accountable.db import DbConn, activities, contacts, deals, get_or_404, insert_row
 from accountable.schemas import ActivityIn, ActivityOut, DoneIn
 
@@ -55,30 +56,32 @@ def list_activities(conn: DbConn):
 
 
 @router.post("", status_code=201, response_model=ActivityOut)
-def log_activity(body: ActivityIn, conn: DbConn):
+def log_activity(body: ActivityIn, conn: DbConn, user: CurrentUser):
     check_record(conn, body)
-    new_id = insert_row(conn, activities, body.model_dump())
+    new_id = insert_row(conn, activities, body.model_dump(), by=user.name)
     return get_activity(conn, new_id)
 
 
 @router.put("/{activity_id}", response_model=ActivityOut)
-def edit_activity(activity_id: int, body: ActivityIn, conn: DbConn):
+def edit_activity(activity_id: int, body: ActivityIn, conn: DbConn, user: CurrentUser):
     editable(conn, activity_id)
     check_record(conn, body)
     conn.execute(
         update(activities)
         .where(activities.c.id == activity_id)
-        .values(**body.model_dump())
+        .values(**body.model_dump(), updated_by=user.name)
     )
     return get_activity(conn, activity_id)
 
 
 @router.patch("/{activity_id}", response_model=ActivityOut)
-def set_done(activity_id: int, body: DoneIn, conn: DbConn):
+def set_done(activity_id: int, body: DoneIn, conn: DbConn, user: CurrentUser):
     if get_or_404(conn, activities, activity_id)["follow_up_date"] is None:
         raise HTTPException(422, "Only a follow-up can be done")
     conn.execute(
-        update(activities).where(activities.c.id == activity_id).values(done=body.done)
+        update(activities)
+        .where(activities.c.id == activity_id)
+        .values(done=body.done, updated_by=user.name)
     )
     return get_activity(conn, activity_id)
 

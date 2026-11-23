@@ -6,7 +6,9 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Wh
 
 Every record has an id, the date and time it was created and last changed, and who added it and who last changed it, as [sign-in.md](sign-in.md) sets out.
 
-An organization, contact or deal page shows, under its details, "Added by Sam Lee on 3 Nov 2026" and, once it has been changed, "Last changed by Ingo Prause on 18 Nov 2026".
+An organization, contact or deal page shows, under its details, "Added by Sam Lee on 3 Nov 2026" and, once it has been changed, "Last changed by Ingo Prause on 18 Nov 2026". Sample contacts who became customers show "Last changed by Sample data", since the sample data changed them after adding them.
+
+A change one person's action makes to other records counts as theirs too: deleting an organization or contact makes them who last changed the records that pointed to it. A pipeline drop marks only the moved deal as changed, though the other deals in its column get new places.
 
 ## Deleting
 

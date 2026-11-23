@@ -6,8 +6,8 @@ export const test = base.extend<{ consoleErrors: string[] }>({
     async ({ page }, use) => {
       const errors: string[] = [];
       page.on("console", (msg) => {
-        const handled422 = msg.text().includes("status of 422");
-        if (msg.type() === "error" && !handled422) errors.push(msg.text());
+        const handled = /status of (401|422)/.test(msg.text());
+        if (msg.type() === "error" && !handled) errors.push(msg.text());
       });
       page.on("pageerror", (err) => errors.push(err.message));
       await use(errors);

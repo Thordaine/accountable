@@ -2,10 +2,17 @@ import type { Stage, Status } from "../lib/stages";
 
 export type Kind = "organizations" | "contacts" | "deals";
 
-interface Stored {
+export interface User {
+  name: string;
+  email: string;
+}
+
+export interface Stamped {
   id: number;
   created_at: string;
   updated_at: string;
+  created_by: string;
+  updated_by: string;
 }
 
 export interface OrganizationIn {
@@ -15,7 +22,7 @@ export interface OrganizationIn {
   notes: string | null;
 }
 
-export interface Organization extends Stored, OrganizationIn {
+export interface Organization extends Stamped, OrganizationIn {
   contact_count: number;
   open_deal_value: number;
 }
@@ -29,7 +36,7 @@ export interface ContactIn {
   status: Status;
 }
 
-export interface Contact extends Stored, ContactIn {
+export interface Contact extends Stamped, ContactIn {
   organization_name: string | null;
 }
 
@@ -43,7 +50,7 @@ export interface DealIn {
   close_date: string;
 }
 
-export interface Deal extends Stored, DealIn {
+export interface Deal extends Stamped, DealIn {
   position: number;
   organization_name: string | null;
   contact_name: string | null;
@@ -61,7 +68,7 @@ export interface ActivityIn {
   done: boolean;
 }
 
-export interface Activity extends Stored, Omit<ActivityIn, "type"> {
+export interface Activity extends Stamped, Omit<ActivityIn, "type"> {
   type: ActivityType | "auto";
   contact_name: string | null;
   deal_name: string | null;

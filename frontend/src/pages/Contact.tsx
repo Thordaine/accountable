@@ -60,6 +60,7 @@ export function Contact() {
         <div className="stack">
           <Panel title="Details">
             <Details
+              stamped={contact}
               items={[
                 [
                   "Organization",

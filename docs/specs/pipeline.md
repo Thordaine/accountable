@@ -4,7 +4,7 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Th
 
 - One column per stage, in order: New, Qualified, Proposal, Negotiation, Won, Lost.
 - Each card shows the deal's name, organization (if any), value and close date. A late card stands out in Raspberry with a "Late" badge. A click, or Enter, opens the deal's page.
-- Drag a card, with the mouse or the keyboard, to another column to change its stage, or within a column to change its place. The card stays exactly where it's dropped, and its place is saved. Dropped on a column's empty space, it goes after the last card shown.
+- Drag a card, with the mouse or the keyboard, to another column to change its stage, or within a column to change its place. The card stays exactly where it's dropped, and its place is saved. Only the moved deal then shows the mover as who last changed it; the other cards in the column keep theirs. Dropped on a column's empty space, it goes after the last card shown.
 - Each column's header shows the stage, the number of deals, their total value and their expected revenue.
 - Above the board: the total value and expected revenue of all open deals.
 - All figures update as soon as a card is dropped, without waiting for the server. If the server refuses the move, the card goes back and "Couldn't move the deal" shows.

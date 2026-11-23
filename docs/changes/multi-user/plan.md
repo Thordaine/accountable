@@ -41,7 +41,7 @@ Each part below could be built by its own agent: no file appears in two parts. T
 - `package.json`: `start` (builds the frontend, then `uv run --env-file .env uvicorn accountable.main:app --port 8000`); `dev` unchanged.
 - `pyproject.toml`, `uv.lock`: `psycopg[binary]`, `alembic`, `pyjwt[crypto]`, `tzdata` (through `uv add`); Alembic's settings under `[tool.alembic]`.
 - `frontend/package.json`, `package-lock.json`: `@supabase/supabase-js`.
-- `render.yaml` (new): one Python web service on the free plan; build installs with `npm ci` and `uv sync --frozen` and builds the frontend; start runs uvicorn on `$PORT`; `DATABASE_URL`, `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` with `sync: false`, so their values are entered in Render; health check `/api/health`.
+- `render.yaml` (new): one Python web service on the free plan; build installs with `npm ci` and `uv sync --frozen --no-dev` and builds the frontend; start runs uvicorn on `$PORT`; `DATABASE_URL`, `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` with `sync: false`, so their values are entered in Render; health check `/api/health`.
 
 ### 2. Backend database
 
@@ -49,7 +49,7 @@ Each part below could be built by its own agent: no file appears in two parts. T
 - `backend/accountable/migrate.py` (new): `upgrade(engine)` runs the migrations and says whether it created the database. A local SQLite file from before this change (tables but no `alembic_version`) is stamped at the first revision, then upgraded.
 - `backend/migrations/env.py`, `backend/migrations/script.py.mako`, `backend/migrations/versions/0001_mvp_schema.py`, `backend/migrations/versions/0002_who_added.py` (new). 0002 fills existing rows with "Sample data" and converts their times from the computer's own zone to UTC, so a local file's times don't shift.
 - `backend/accountable/seed.py`: every row by "Sample data"; times built in the computer's own zone (UTC on Render) and stored as UTC; `python -m accountable.seed` always opens the local SQLite file, never `DATABASE_URL`.
-- `backend/tests/test_migrate.py` (new), `backend/tests/test_seed.py`, `backend/tests/test_db.py` (new).
+- `backend/tests/test_migrate.py` (new), `backend/tests/test_seed.py`, `backend/tests/test_db.py` (new); helpers `backend/tests/mvp_schema.sql` (the MVP's tables, for the old-file upgrade) and `backend/tests/computer_zone.py` (runs code as if the computer were in another zone) (new).
 
 ### 3. Backend sign-in and the app
 
@@ -65,7 +65,7 @@ Each part below could be built by its own agent: no file appears in two parts. T
 - `backend/accountable/organizations.py`, `contacts.py`, `deals.py`, `activities.py`: each write takes `CurrentUser` and passes its name.
 - `backend/accountable/rules.py`: automatic entries and the contact's status change carry the name of the person whose change wrote them; an automatic entry's time is now in UTC, to the minute.
 - `backend/accountable/schemas.py`: `created_by` and `updated_by` on `Record`; `happened_at` in `ActivityIn` is Pydantic's `AwareDatetime`, so a time without a zone is refused.
-- `backend/tests/test_organizations.py`, `test_contacts.py`, `test_deals.py`, `test_activities.py`, `test_rules.py`, `test_dashboard.py` (only where signatures change).
+- `backend/tests/test_organizations.py`, `test_contacts.py`, `test_deals.py`, `test_activities.py`, `test_rules.py`, `test_dashboard.py` (only where signatures change); helper `backend/tests/other_user.py` (new), whose `sign_in_as(client, name)` makes requests come from someone else.
 
 ### 5. Backend search
 
@@ -84,14 +84,15 @@ Each part below could be built by its own agent: no file appears in two parts. T
 - `frontend/src/test/fakeApi.ts`, `frontend/src/test/renderApp.tsx`: signed in by default, with `/api/config` and `/api/me`; stamps with `created_by`.
 - `frontend/src/auth/session.test.ts`, `frontend/src/auth/SignIn.test.tsx`, `frontend/src/api/client.test.ts` (new).
 - `playwright.config.ts`: `DATABASE_URL: ""` for the backend; a setup project that signs in once through the screen and saves the browser state for the other tests.
-- `e2e/auth.setup.ts`, `e2e/sign-in.spec.ts` (new).
+- `e2e/auth.setup.ts`, `e2e/sign-in.spec.ts` (new); `e2e/fixtures.ts` lets 401 console errors through.
+- `frontend/src/pipeline/boardMath.test.ts`: the new stamp fields.
 
 ### 7. Frontend records: who added
 
-- `frontend/src/pages/RecordPage.tsx`: "Added by … on …" and "Last changed by … on …".
+- `frontend/src/pages/RecordPage.tsx`, `frontend/src/pages/record-page.css` (new): "Added by … on …" and "Last changed by … on …"; `Organization.tsx`, `Contact.tsx` and `Deal.tsx` pass the record to `Details`.
 - `frontend/src/components/Timeline.tsx`: "by <name>" on each entry.
 - `frontend/src/forms/ActivityForm.tsx`: sends `happened_at` as an ISO string with the browser's offset, and shows a saved one in the browser's zone when editing (today it slices the string, which would show UTC).
-- `frontend/src/pages/Organization.test.tsx`, `Contact.test.tsx`, `Deal.test.tsx`, `frontend/src/components/Timeline.test.tsx`, `frontend/src/forms/ActivityForm.test.tsx`.
+- `frontend/src/pages/Organization.test.tsx`, `Contact.test.tsx`, `Deal.test.tsx`, `frontend/src/pages/RecordPage.test.tsx` (new), `frontend/src/components/Timeline.test.tsx`, `frontend/src/forms/ActivityForm.test.tsx`.
 - `e2e/who-added.spec.ts` (new).
 
 ### 8. Frontend search
@@ -112,6 +113,8 @@ Each part below could be built by its own agent: no file appears in two parts. T
 - `frontend/src/test/setup.ts`: a `matchMedia` stub for jsdom.
 - `frontend/src/components/NavBar.test.tsx`, `frontend/src/components/UserMenu.test.tsx` (new), `frontend/src/lib/initials.test.ts` (new), `frontend/src/lib/theme.test.ts`.
 - `e2e/theme.spec.ts`: rewritten for the menu.
+- `e2e/journey.spec.ts`, `e2e/records.spec.ts`, `e2e/tables.spec.ts`: the Organization list picked with `exact: true`, since the search box's label also matched.
+- `frontend/src/styles/tokens.css`: a comment that named the toggle.
 
 ### 10. Docs and agents
 
@@ -208,6 +211,7 @@ Each success criterion is covered by the tests below: 1 by `npm run check` itsel
 
 `test_rules.py`
 - A stage move's automatic entry, and a win's status change on the contact, are by the person who moved the deal.
+- A drop marks only the moved deal as changed: the other deals in its column keep who last changed them and when, both after a move to another column and after a reorder within one.
 - A deal won with `X-Time-Zone: Pacific/Kiritimati` closes on that zone's today.
 
 `test_search.py`
@@ -243,7 +247,7 @@ Each success criterion is covered by the tests below: 1 by `npm run check` itsel
 `search/SearchBox.test.tsx`
 - Typing shows the groups in order with their hints; a group with no matches is hidden; no matches shows "No matches for "<text>"".
 - The first match is highlighted; Down then Enter opens the second match's page and empties the box; a click opens a match.
-- Escape and a click outside close the dropdown; an empty box closes it.
+- Escape and a click outside close the dropdown and keep the text, and typing again reopens it; an empty box closes it.
 
 `lib/initials.test.ts`
 - "Ingo Prause" gives "IP", "Ingo van Prause" gives "IP", "Cher" gives "C", an email gives its first letter in capitals.
@@ -295,4 +299,28 @@ The existing end-to-end specs run unchanged, signed in by the setup project.
 
 ## Changes during build
 
-None yet.
+Where the build departed from this plan:
+
+- **`make_engine(database_url)`**, not `make_engine(settings)`: it needs only the URL, and `None` or `""` means the local SQLite file at `db_path()`. `ACCOUNTABLE_DB` is still read by `db.db_path()`; `ACCOUNTABLE_RESET` is `Settings.reset`.
+- **Settings are read in `create_app()`**, not the lifespan, because which routes exist (`/api/local-sign-in` only in local mode) depends on them. `create_app(frontend=FRONTEND_DIST)` takes the built frontend's folder, so `test_web.py` passes a temporary one. `Settings` is a frozen dataclass with `is_local` and `jwks_url` (`<SUPABASE_URL>/auth/v1/.well-known/jwks.json`).
+- **Tokens:** ES256 and RS256 are accepted. Tests pass their keys through `app.state.find_signing_key`. A failed check is a 401 `{"detail": "Not signed in"}` with `WWW-Authenticate: Bearer`. The local token is `local-test-user` (`auth.LOCAL_TOKEN`); a wrong local sign-in is a 401 "Wrong email or password". FastAPI 0.163 nests included routers, so the 401 sweep in `test_auth.py` walks `app.openapi()["paths"]`.
+- **`web.py`** is a `StaticFiles` subclass; anything under `/api/` is a JSON 404 for every method.
+- **Today with no `X-Time-Zone` is UTC's day** (it was the computer's), through a pure `today_in(zone, now)` that `get_today` calls. The lifespan seeds a new database with that day; `npm run seed` still uses the computer's own day.
+- **Times on Postgres** are `timestamp without time zone` holding UTC, the same as on SQLite; `UtcDateTime` adds the zone back when reading.
+- **Migrations:** no downgrades. SQLite's foreign key checks are off while they run, because batch mode rebuilds tables, and back on after. 0002 adds the columns nullable, fills them with "Sample data", converts times to UTC row by row in Python (so daylight saving is right), then makes the columns NOT NULL. `[tool.alembic]` holds only `script_location`.
+- **One instant for both stamps.** `insert_row` stamped `created_at` and `updated_at` from two calls, microseconds apart, and the page shows "Last changed" only when they differ. `db.new_stamps(by)` now gives all four stamps at one instant, and the seed uses it too. So sample contacts made customers show "Last changed by Sample data": the seed changed them after adding them. The step 2 bridges (`by` defaulting to "Sample data", naive times read in the computer's zone, an xfail in `test_db.py`) are gone.
+- **`updated_by` follows `updated_at`**, including side effects: deleting an organization or contact marks the records that pointed to it as changed by the person deleting. A pipeline drop marks only the moved deal (the user's choice): the column is renumbered with each deal's `updated_at` kept, then the moved deal gets `updated_by`, and its `updated_at` changes even when only its place did.
+- **rules.py signatures:** `log_auto(conn, description, by, **record)` (it takes the time itself, so no `today`), `win_for_contact(conn, contact_id, by)`, `change_stage(..., today, by)`, `move_deal(..., today, by)`.
+- **Search:** names equal ignoring case are ordered by id. A missing `q` is an empty query. The response models are `Match`, `MatchWithOrganization` and `SearchResults`.
+- **Only a pick empties the search box**; Escape and a click outside close the dropdown and keep the text (the user's choice). Headless UI sets the input to `displayValue(value)` when the dropdown closes, and `value` is always `null`, so `ComboboxInput` gets `displayValue={() => text}`. The dropdown is `modal={false}`, because Headless UI's default locks the page's scroll and makes the rest of the page inert. The box is 240 pixels wide and the dropdown 340, 6 pixels below it, left-aligned.
+- **The user menu is a Headless UI `Popover`**, the plan's fallback: in 2.2.10 `MenuItem` closes on click and `MenuItems` after Enter, so a theme pick couldn't leave a `Menu` open. The panel has role `menu`, the themes `menuitemradio`, Sign out `menuitem`; Up and Down wrap.
+- **The sign-in screen follows System live too**: `SignIn.tsx` calls `useTheme()` for its listener, which otherwise lived only in the menu.
+- **Frontend sign-in:** the session shape adds `local`, and `token()` is async (supabase-js may refresh). The local token is kept under `accountable.token`. If `/api/me` fails the app treats it as signed out, and signing out clears the React Query cache. `main.tsx` loads the config with a top-level await and passes the session to `App`.
+- **Activity times:** `ActivityForm` sends `formatISO(parseISO(value))`, the local time with its offset. `ActivityForm.test.tsx` runs in `Pacific/Kiritimati` with `vi.stubEnv("TZ", ...)` and a guard test that the zone took effect. The end-to-end close-date check in Kiritimati only tells the zones apart when it runs between 10:00 and 24:00 UTC.
+- **"Last changed" shows when `updated_at` differs from `created_at`.** `Details` in `RecordPage.tsx` takes a required `stamped` prop, so the organization, contact and deal pages each pass it (one line each). The "Last changed" case is tested in a new `RecordPage.test.tsx`, because the fake API can't serve a changed record.
+- **End-to-end sign-in:** the `chrome` project sends `Authorization: Bearer local-test-user` as `extraHTTPHeaders`, because the specs call the API with `page.request` and the token lives in localStorage, not a cookie. Playwright adds these headers to the browser's requests too, so the signed-in specs don't prove the app sends its token; `sign-in.spec.ts`, which clears them, and `client.test.ts` do. The saved state is `test-results/auth/test-user.json` (`SIGNED_IN` in `playwright.config.ts`). `e2e/fixtures.ts` also lets "status of 401" console errors through, as it did 422s.
+- **Existing specs changed after all:** `journey.spec.ts`, `records.spec.ts` and `tables.spec.ts` pick the Organization list with `exact: true`. Playwright matches names by substring, so the search box's label "Search organizations, contacts and deals" also matched and failed strict mode. Seen, not fixed, and older than this change: when Add deal opens straight after the Add contact dialog closes, the top bar stays in the accessibility tree behind the second dialog.
+- **render.yaml** pins `PYTHON_VERSION` 3.12.12 and `NODE_VERSION` 24.22.3 (CI's Node 24), and has `branch: main` and `autoDeployTrigger: checksPass`, so Render deploys `main` when CI passes. Render's Python runtime has Node and npm, so there's no Dockerfile. The build leaves out the dev tools with `uv sync --frozen --no-dev`, and the start command is `uv run --no-dev`, since a plain `uv run` would install them again. Not yet tried on Render.
+- **ui-check can type:** `.claude/agents/ui-check.md` gains the `browser_type` tool, which it needs to sign in and to type in the search box.
+- **Step 5's check against a real Supabase project** hasn't been run yet; it waits for the user.
+- **Files outside their part:** `Timeline.test.tsx` (part 7's) and `boardMath.test.ts` (no part) gained the new stamp fields so tsc passes; `tokens.css` says the dark theme is set from the user menu.

@@ -28,7 +28,7 @@ test("a salesperson's day, end to end", async ({ page }) => {
     await expect(page.getByRole("link", { name: "Ines Okonkwo" })).toBeVisible();
 
     await page.getByRole("button", { name: "Add deal" }).last().click();
-    await expect(page.getByRole("combobox", { name: "Organization" })).toHaveValue("Northwind Bakeries");
+    await expect(page.getByRole("combobox", { name: "Organization", exact: true })).toHaveValue("Northwind Bakeries");
     await page.getByLabel("Name").fill("Northwind oven monitoring");
     await page.getByRole("combobox", { name: "Main contact" }).fill("Ines");
     await page.getByRole("option", { name: /Ines Okonkwo/ }).click();

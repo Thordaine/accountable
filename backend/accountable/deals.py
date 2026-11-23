@@ -6,6 +6,7 @@ from fastapi import APIRouter, Response
 from sqlalchemy import Connection, Select, case, delete, func, select, update
 
 from accountable.activities import activity_query
+from accountable.auth import CurrentUser
 from accountable.db import (
     DbConn,
     Today,
@@ -92,9 +93,9 @@ def read_deal(deal_id: int, conn: DbConn):
 
 
 @router.post("", status_code=201, response_model=DealOut)
-def create_deal(body: DealIn, conn: DbConn, today: Today):
+def create_deal(body: DealIn, conn: DbConn, today: Today, user: CurrentUser):
     values = deal_values(body, today) | {"position": top_position(conn, body.stage)}
-    new_id = insert_row(conn, deals, values)
+    new_id = insert_row(conn, deals, values, by=user.name)
     return get_deal(conn, new_id)
 
 
@@ -104,12 +105,13 @@ def replace_deal(
     body: DealIn,
     conn: DbConn,
     today: Today,
+    user: CurrentUser,
 ):
     old_stage = get_or_404(conn, deals, deal_id)["stage"]
-    values = deal_values(body, today) | {"stage": old_stage}
+    values = deal_values(body, today) | {"stage": old_stage, "updated_by": user.name}
     conn.execute(update(deals).where(deals.c.id == deal_id).values(**values))
     if body.stage != old_stage:
-        move_deal(conn, deal_id, body.stage, 0, today)
+        move_deal(conn, deal_id, body.stage, 0, today, user.name)
     return get_deal(conn, deal_id)
 
 
@@ -119,8 +121,9 @@ def move(
     body: MoveIn,
     conn: DbConn,
     today: Today,
+    user: CurrentUser,
 ):
-    move_deal(conn, deal_id, body.stage, body.index, today)
+    move_deal(conn, deal_id, body.stage, body.index, today, user.name)
     return get_deal(conn, deal_id)
 
 

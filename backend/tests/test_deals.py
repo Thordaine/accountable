@@ -1,4 +1,5 @@
 from conftest import add
+from other_user import sign_in_as
 
 
 def test_deal_rules(client):
@@ -35,7 +36,7 @@ def test_delete_deal(client):
             type="note",
             deal_id=deal["id"],
             description=f"Note {n}",
-            happened_at="2026-11-10T10:00",
+            happened_at="2026-11-10T10:00Z",
         )
     assert client.get(f"/api/deals/{deal['id']}/impact").json() == {"activities": 3}
     assert client.delete(f"/api/deals/{deal['id']}").status_code == 204
@@ -45,7 +46,24 @@ def test_delete_deal(client):
 def test_activity_needs_exactly_one_record(client):
     ann = add(client, "contacts", name="Ann")
     deal = add(client, "deals", name="Renewal")
-    base = {"type": "note", "description": "x", "happened_at": "2026-11-10T10:00"}
+    base = {"type": "note", "description": "x", "happened_at": "2026-11-10T10:00Z"}
     both = {**base, "contact_id": ann["id"], "deal_id": deal["id"]}
     assert client.post("/api/activities", json=both).status_code == 422
     assert client.post("/api/activities", json=base).status_code == 422
+
+
+def test_deal_records_who_added_and_changed(client):
+    deal = add(client, "deals", name="Renewal")
+    assert (deal["created_by"], deal["updated_by"]) == ("Test User", "Test User")
+    sign_in_as(client, "Sam Lee")
+    changed = client.put(f"/api/deals/{deal['id']}", json={"name": "Renewal 2027"})
+    assert (changed.json()["created_by"], changed.json()["updated_by"]) == (
+        "Test User",
+        "Sam Lee",
+    )
+
+
+def test_deal_times_end_in_z(client):
+    deal = add(client, "deals", name="Renewal")
+    assert deal["created_at"].endswith("Z")
+    assert deal["updated_at"].endswith("Z")

@@ -49,7 +49,7 @@ test("organization page adds a contact with the organization filled in", async (
   await page.goto("/organizations");
   await page.getByRole("link", { name: "Osprey Materials" }).click();
   await page.getByRole("button", { name: "Add contact" }).click();
-  await expect(page.getByRole("combobox", { name: "Organization" })).toHaveValue("Osprey Materials");
+  await expect(page.getByRole("combobox", { name: "Organization", exact: true })).toHaveValue("Osprey Materials");
   await page.getByLabel("Name").fill("Petra Lindqvist");
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByRole("link", { name: "Petra Lindqvist" })).toBeVisible();

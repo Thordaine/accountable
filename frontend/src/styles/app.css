@@ -107,25 +107,6 @@ textarea:focus-visible {
   font-size: 13px;
   border-radius: 8px;
 }
-.theme-toggle {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  margin-left: -20px;
-  border: 0;
-  border-radius: 10px;
-  background: var(--page);
-  color: var(--ink);
-  cursor: pointer;
-}
-.theme-toggle svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
 .link-btn {
   font: inherit;
   border: 0;

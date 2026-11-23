@@ -1,0 +1,8 @@
+.stamps {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.stamps p {
+  margin: 0;
+}

@@ -6,7 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Accountable</title>
     <script>
-      if (localStorage.getItem("accountable-theme") === "dark")
+      const theme = localStorage.getItem("accountable-theme");
+      if (
+        theme === "dark" ||
+        (theme === "system" &&
+          matchMedia("(prefers-color-scheme: dark)").matches)
+      )
         document.documentElement.dataset.theme = "dark";
     </script>
   </head>
