@@ -7,6 +7,7 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Si
 - Each section has its own address, and so does each record's page (for example `/deals/12`), so the browser's back button, refresh and bookmarks work.
 - Designed for laptop and desktop screens from 1280 pixels wide. The content is at most 1360 pixels wide.
 - Fonts and libraries are bundled with the app, never loaded from the internet.
+- Dates and times show in the browser's time zone, and "today" is today there: late deals, follow-ups due, the dashboard's date and the close date of a deal won today. People in different time zones each see their own.
 - Your own changes show on every screen as soon as the server confirms it. Other people's changes show when you open a screen or come back to the browser tab; there are no live updates. When two people change the same record, the last save wins.
 - Short confirmations ("Deal saved", "Activity logged", "Moved to Won", "Contact deleted") appear at the bottom right.
 
