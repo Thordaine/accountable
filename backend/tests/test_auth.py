@@ -15,14 +15,16 @@ OPEN_ROUTES = {"/api/health", "/api/config", "/api/local-sign-in"}
 SUPABASE_URL = "https://project.supabase.co"
 
 
-def token(key=KEY, **claims) -> str:
-    """A Supabase-style access token for Sam Lee, signed with key."""
+def token(key=KEY, without=(), **claims) -> str:
+    """A Supabase-style access token for Sam Lee, signed with key, minus the claims in without."""
     payload = {
         "aud": "authenticated",
         "exp": int(time.time()) + 3600,
         "email": "sam@example.com",
         "user_metadata": {"display_name": "Sam Lee"},
     } | claims
+    for name in without:
+        del payload[name]
     return jwt.encode(payload, key, algorithm="ES256")
 
 
@@ -90,8 +92,17 @@ def test_supabase_token_gives_display_name_and_email():
     assert (user.name, user.email) == ("Sam Lee", "sam@example.com")
 
 
-def test_supabase_token_without_display_name_goes_by_email():
-    user = supabase_user(token(user_metadata={}), find_key)
+@pytest.mark.parametrize(
+    "no_name",
+    [
+        token(user_metadata={}),
+        token(user_metadata=None),
+        token(without=["user_metadata"]),
+    ],
+    ids=["empty metadata", "null metadata", "no metadata"],
+)
+def test_supabase_token_without_display_name_goes_by_email(no_name):
+    user = supabase_user(no_name, find_key)
     assert user.name == "sam@example.com"
 
 
@@ -101,8 +112,18 @@ def test_supabase_token_without_display_name_goes_by_email():
         token(exp=int(time.time()) - 60),
         token(aud="anon"),
         token(key=OTHER_KEY),
+        token(without=["email"]),
+        token(email=None),
+        token(email=""),
     ],
-    ids=["expired", "wrong audience", "another key"],
+    ids=[
+        "expired",
+        "wrong audience",
+        "another key",
+        "no email",
+        "null email",
+        "empty email",
+    ],
 )
 def test_bad_supabase_token_is_401(shared_client, bad_token):
     response = shared_client.get(

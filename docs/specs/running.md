@@ -4,7 +4,7 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Wh
 
 ## The shared app
 
-- The team uses one Accountable on the web, at its onrender.com address on Render's free plan. It needs an internet connection, for Supabase.
+- The team uses one Accountable on the web, at its onrender.com address on Render's free plan, in Render's Frankfurt region, the closest to the Supabase database in eu-west-1 (Ireland). It needs an internet connection, for Supabase.
 - One web service serves both the app and its API. It brings the database up to date each time it starts.
 - `render.yaml` describes the service. The Supabase settings are entered in Render, never written in the file.
 - Render deploys `main` each time CI passes on it.
@@ -13,6 +13,8 @@ Part of the spec; [`docs/spec.md`](../spec.md) has the summary and the index. Wh
 ## Settings
 
 The shared app needs three settings, kept in `.env` on this computer and entered in Render: `DATABASE_URL` (Supabase's session pooler), `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY`. The browser is given only the publishable key.
+
+The Supabase project must have sign-ups and anonymous sign-ins turned off (Authentication settings), since the server lets in anyone with a Supabase account on the project.
 
 ## On this computer
 

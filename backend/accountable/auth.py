@@ -35,7 +35,7 @@ class LocalSignIn(BaseModel):
 
 
 def signed_out() -> HTTPException:
-    """The 401 for a missing, wrong or expired token."""
+    """The 401 for a missing, wrong or expired token, or one with no email."""
     return HTTPException(401, "Not signed in", headers={"WWW-Authenticate": "Bearer"})
 
 
@@ -47,8 +47,11 @@ def supabase_user(token: str, find_key: KeyFinder) -> User:
         )
     except jwt.PyJWTError:
         raise signed_out()
-    name = claims.get("user_metadata", {}).get("display_name")
-    return User(name=name or claims["email"], email=claims["email"])
+    email = claims.get("email")
+    if not email:
+        raise signed_out()
+    name = (claims.get("user_metadata") or {}).get("display_name")
+    return User(name=name or email, email=email)
 
 
 def local_user(token: str) -> User:

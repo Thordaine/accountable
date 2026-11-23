@@ -3,6 +3,7 @@ services:
     name: accountable
     runtime: python
     plan: free
+    region: frankfurt
     branch: main
     autoDeployTrigger: checksPass
     buildCommand: npm ci && uv sync --frozen --no-dev && npm -w frontend run build
